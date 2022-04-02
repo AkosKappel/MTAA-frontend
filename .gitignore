@@ -14,8 +14,6 @@
 .cxx
 local.properties
 
-.idea/
-
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,android,kotlin,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,android,kotlin,java
 
