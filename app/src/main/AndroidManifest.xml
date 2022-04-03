@@ -10,6 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MTAA">
         <activity
+            android:name=".ManageUsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MeetingSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ScheduleMeetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".CalendarActivity"
             android:exported="false" />
         <activity
