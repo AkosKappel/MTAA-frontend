@@ -1,19 +1,21 @@
 package com.example.mtaa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.data.SessionManager
 import com.example.mtaa.data.model.User
 import com.example.mtaa.data.model.UserResponse
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -98,7 +100,7 @@ class RegistrationActivity : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         val registeredUser: UserResponse? = response.body()
-                        if (registeredUser != null) {
+                        if (response.isSuccessful && registeredUser != null) {
                             Toast.makeText(
                                 this@RegistrationActivity,
                                 "User registered successfully", Toast.LENGTH_LONG
@@ -113,6 +115,14 @@ class RegistrationActivity : AppCompatActivity() {
                                 Intent(this@RegistrationActivity, MainActivity::class.java)
                             startActivity(intent)
                             finish()
+                        }
+                    } else if (response.code() == 400) {
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            etEmail.error = jObjError.getString("detail").toString()
+                            etEmail.requestFocus()
+                        } catch (e: Exception) {
+                            Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
                         }
                     } else {
                         Log.d(
