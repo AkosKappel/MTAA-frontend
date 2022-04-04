@@ -10,6 +10,9 @@ class SessionManager(context: Context) {
 
     companion object {
         const val USER_TOKEN = "user_token"
+        const val USER_ID = "user_id"
+        const val USER_EMAIL = "user_email"
+        const val PROFILE_PICTURE = "profile_picture"
     }
 
     fun saveAuthToken(token: String) {
@@ -20,5 +23,47 @@ class SessionManager(context: Context) {
 
     fun fetchAuthToken(): String? {
         return prefs.getString(USER_TOKEN, null)
+    }
+
+    fun deleteAuthToken() {
+        val editor = prefs.edit()
+        editor.remove(USER_TOKEN)
+        editor.apply()
+    }
+
+    fun saveUserId(id: String) {
+        val editor = prefs.edit()
+        editor.putString(USER_ID, id)
+        editor.apply()
+    }
+
+    fun fetchUserId(): String? {
+        return prefs.getString(USER_ID, null)
+    }
+
+    fun saveUserEmail(email: String) {
+        val editor = prefs.edit()
+        editor.putString(USER_EMAIL, email)
+        editor.apply()
+    }
+
+    fun fetchUserEmail(): String? {
+        return prefs.getString(USER_EMAIL, null)
+    }
+
+    fun saveProfilePicture(picture: String) {
+        val editor = prefs.edit()
+        editor.putString(PROFILE_PICTURE, picture)
+        editor.apply()
+    }
+
+    fun fetchProfilePicture(): String? {
+        return prefs.getString(PROFILE_PICTURE, null)
+    }
+
+    fun clear() {
+        val editor = prefs.edit()
+        editor.clear()
+        editor.apply()
     }
 }

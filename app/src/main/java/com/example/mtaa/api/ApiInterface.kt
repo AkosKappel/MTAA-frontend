@@ -6,25 +6,26 @@ import retrofit2.http.*
 
 interface ApiInterface {
 
-    @FormUrlEncoded
     @POST("/register")
     fun registerUser(
-        @Field("email") email: String,
-        @Field("password") password: String
+        @Body user: User
     ): Call<UserResponse>
 
     @FormUrlEncoded
     @POST("/login")
     fun loginUser(
-        @Query("username") email: String,
-        @Query("password") password: String
+        @Field("username") email: String,
+        @Field("password") password: String
     ): Call<TokenData>
+
+//    // TODO: ukazka jak funguje id v url
+//    @POST("/users/{id}")
+//    fun getUser(
+//        @Body user: User,
+//        @Path("id") id: Int
+//    ): Call<UserResponse>
 
     @GET("/users/calls")
     fun getCalls(): Call<CallResponse>
-
-    // INFO: toto je iba pre testovanie
-//    @GET("/posts/1")
-//    fun getPost(): Call<Post>
 
 }
