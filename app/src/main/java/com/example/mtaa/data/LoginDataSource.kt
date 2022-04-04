@@ -1,6 +1,6 @@
 package com.example.mtaa.data
 
-import com.example.mtaa.data.model.LoggedInUser
+import com.example.mtaa.data.model.UserResponse
 import java.io.IOException
 
 /**
@@ -8,10 +8,10 @@ import java.io.IOException
  */
 class LoginDataSource {
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(username: String, password: String): Result<UserResponse> {
         try {
             // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
+            val fakeUser = UserResponse(java.util.UUID.randomUUID().toString(), "Jane Doe")
             return Result.Success(fakeUser)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
