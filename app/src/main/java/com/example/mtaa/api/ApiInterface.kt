@@ -2,6 +2,7 @@ package com.example.mtaa.api
 
 import com.example.mtaa.data.model.*
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInterface {
@@ -25,7 +26,25 @@ interface ApiInterface {
 //        @Path("id") id: Int
 //    ): Call<UserResponse>
 
+    @GET("/users")
+    fun getUser(
+        @Field("email") email: String? = null,
+    ): Call<User>
+
+    @PUT("/users")
+    fun updateUser(
+        @Body user: User
+    ): Call<UserResponse>
+
+    @DELETE("/users")
+    fun deleteUser(): Call<Response<Void>>
+
     @GET("/users/calls")
     fun getCalls(): Call<CallResponse>
+
+//    @POST("/users/calls")
+//    fun createCall(
+//        @Body call: Call<>
+//    ): Call<CallResponse>
 
 }

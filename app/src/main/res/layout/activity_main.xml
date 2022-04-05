@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
@@ -19,53 +20,63 @@
 
         <Button
             android:id="@+id/btnStartCall"
-            android:layout_width="192dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
             android:layout_marginTop="8dp"
             android:text="Start call"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:theme="@style/primaryButton" />
 
         <Button
             android:id="@+id/btnScheduleMeeting"
-            android:layout_width="192dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
             android:layout_marginTop="8dp"
             android:text="Schedule meeting"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:theme="@style/primaryButton" />
 
         <Button
             android:id="@+id/btnCalendar"
-            android:layout_width="192dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
             android:layout_marginTop="8dp"
             android:text="Calendar"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:theme="@style/primaryButton" />
 
         <Button
             android:id="@+id/btnManageContacts"
-            android:layout_width="192dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
             android:layout_marginTop="8dp"
             android:text="Manage contacts"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:theme="@style/primaryButton" />
 
         <Button
             android:id="@+id/btnLogOut"
-            android:layout_width="192dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
             android:layout_marginTop="8dp"
             android:text="Log out"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="20sp"
+            android:theme="@style/primaryButton" />
 
     </LinearLayout>
 

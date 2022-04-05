@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         btnLogOut.setOnClickListener {
-            // start login activity
+            // logout current user and go to login activity
             sessionManager.deleteAuthToken()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
