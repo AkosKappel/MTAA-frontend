@@ -22,11 +22,11 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars" />
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:srcCompat="@tools:sample/avatars" />-->
 
             <TextView
                 android:id="@+id/tvUserID"
