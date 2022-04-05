@@ -39,7 +39,7 @@
             android:layout_width="192dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Remove user"
+            android:text="Remove contact"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -49,7 +49,7 @@
             android:layout_width="192dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Add user"
+            android:text="Add contact"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp" />
