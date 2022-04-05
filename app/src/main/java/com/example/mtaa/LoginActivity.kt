@@ -1,14 +1,16 @@
 package com.example.mtaa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.data.SessionManager
 import com.example.mtaa.data.model.TokenData
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,6 +23,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var btnRegister: Button
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
+
+    companion object {
+        private const val TAG: String = "LoginActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,10 +60,11 @@ class LoginActivity : AppCompatActivity() {
 
     // login logic
     private fun loginUser(email: String, password: String) {
-        ApiClient.getApiService(this@LoginActivity)
+        ApiClient.getApiService(applicationContext)
             .loginUser(email, password)
             .enqueue(object : Callback<TokenData> {
                 override fun onFailure(call: Call<TokenData>, t: Throwable) {
+                    Log.d(TAG, "onFailure: $t")
                     Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
                 }
 
@@ -70,10 +77,26 @@ class LoginActivity : AppCompatActivity() {
                         if (response.isSuccessful && loginResponse != null) {
                             sessionManager.saveAuthToken(loginResponse.accessToken)
                             switchActivity(MainActivity::class.java, true)
+                        } else if (response.code() == 401) {
+                            try {
+                                val jObjError = JSONObject(response.errorBody()!!.string())
+                                val detail = jObjError.getString("detail").toString()
+                                if (detail.contains("password", true)) {
+                                    etPassword.error = detail
+                                    etPassword.requestFocus()
+                                }
+                            } catch (e: Exception) {
+                                Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG)
+                                    .show()
+                            }
                         } else {
+                            Log.d(
+                                TAG,
+                                "onResponse: ${response.code()} ${response.errorBody()!!.string()}"
+                            )
                             Toast.makeText(
                                 applicationContext,
-                                "${response.code()} ${response.message()}",
+                                "Error: ${response.code()} ${response.errorBody()!!.string()}",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -83,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun switchActivity(targetActivity: Class<*>, finishCurrent: Boolean = false) {
-        val intent = Intent(this@LoginActivity, targetActivity)
+        val intent = Intent(applicationContext, targetActivity)
         startActivity(intent)
         if (finishCurrent) {
             finish()

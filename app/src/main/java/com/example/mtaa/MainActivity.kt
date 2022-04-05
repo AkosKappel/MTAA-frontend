@@ -1,11 +1,14 @@
 package com.example.mtaa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import com.example.mtaa.data.SessionManager
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var sessionManager: SessionManager
 
     private lateinit var btnStartCall: Button
     private lateinit var btnScheduleMeeting: Button
@@ -16,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        sessionManager = SessionManager(this)
 
         // get buttons from view
         btnStartCall = findViewById(R.id.btnStartCall)
@@ -32,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         }
         btnScheduleMeeting.setOnClickListener {
             // start schedule meeting activity
+            val intent = Intent(this, ScheduleMeetActivity::class.java)
+            startActivity(intent)
         }
         btnCalendar.setOnClickListener {
             // start calendar activity
@@ -45,6 +52,10 @@ class MainActivity : AppCompatActivity() {
         }
         btnLogOut.setOnClickListener {
             // start login activity
+            sessionManager.deleteAuthToken()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

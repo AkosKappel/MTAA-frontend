@@ -18,7 +18,7 @@ interface ApiInterface {
         @Field("password") password: String
     ): Call<TokenData>
 
-//    // TODO: ukazka jak funguje id v url
+//    // TODO: ukazka ako funguje id v url
 //    @POST("/users/{id}")
 //    fun getUser(
 //        @Body user: User,

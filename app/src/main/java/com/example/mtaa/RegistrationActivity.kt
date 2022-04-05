@@ -48,11 +48,13 @@ class RegistrationActivity : AppCompatActivity() {
             val email: String = etEmail.text.toString().trim()
             if (email.isEmpty()) {
                 etEmail.error = "Email is required"
+                etEmail.requestFocus()
                 return@setOnClickListener
             }
             val emailPattern: Regex = "^[.\\w-]+@([\\w-]+\\.)+[\\w-]{2,4}$".toRegex()
             if (!email.matches(emailPattern)) {
                 etEmail.error = "Email is not valid"
+                etEmail.requestFocus()
                 return@setOnClickListener
             }
 
@@ -60,19 +62,25 @@ class RegistrationActivity : AppCompatActivity() {
             val password: String = etPassword.text.toString().trim()
             if (password.isEmpty()) {
                 etPassword.error = "Password is required"
+                etPassword.requestFocus()
                 return@setOnClickListener
             }
             if (password.length < minPasswordLength) {
                 etPassword.error = "Password must be at least $minPasswordLength characters"
+                etPassword.requestFocus()
                 return@setOnClickListener
             }
+
+            // confirm password
             val confirmPassword: String = etConfirmPassword.text.toString().trim()
             if (confirmPassword.isEmpty()) {
                 etConfirmPassword.error = "Confirm Password is required"
+                etConfirmPassword.requestFocus()
                 return@setOnClickListener
             }
             if (password != confirmPassword) {
                 etConfirmPassword.error = "Password does not match"
+                etConfirmPassword.requestFocus()
                 return@setOnClickListener
             }
 
@@ -83,15 +91,12 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun registerUser(newUser: User) {
-        ApiClient.getApiService(this@RegistrationActivity)
+        ApiClient.getApiService(applicationContext)
             .registerUser(newUser)
             .enqueue(object : Callback<UserResponse> {
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                     Log.d(TAG, "onFailure: $t")
-                    Toast.makeText(
-                        this@RegistrationActivity,
-                        "Error: ${t.message}", Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
                 }
 
                 override fun onResponse(
@@ -100,9 +105,9 @@ class RegistrationActivity : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         val registeredUser: UserResponse? = response.body()
-                        if (response.isSuccessful && registeredUser != null) {
+                        if (registeredUser != null) {
                             Toast.makeText(
-                                this@RegistrationActivity,
+                                applicationContext,
                                 "User registered successfully", Toast.LENGTH_LONG
                             ).show()
 
@@ -111,16 +116,30 @@ class RegistrationActivity : AppCompatActivity() {
                             sessionManager.saveUserEmail(registeredUser.email)
 
                             // go to home activity
-                            val intent =
-                                Intent(this@RegistrationActivity, MainActivity::class.java)
+                            val intent = Intent(applicationContext, MainActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
                     } else if (response.code() == 400) {
                         try {
                             val jObjError = JSONObject(response.errorBody()!!.string())
-                            etEmail.error = jObjError.getString("detail").toString()
-                            etEmail.requestFocus()
+                            val detail = jObjError.getString("detail").toString()
+                            when {
+                                detail.contains("email", true) -> {
+                                    etEmail.error = detail
+                                    etEmail.requestFocus()
+                                }
+                                detail.contains("password", true) -> {
+                                    etPassword.error = detail
+                                    etPassword.requestFocus()
+                                }
+                                else -> {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Error: $detail", Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
                         } catch (e: Exception) {
                             Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
                         }
@@ -129,6 +148,11 @@ class RegistrationActivity : AppCompatActivity() {
                             TAG,
                             "onResponse: ${response.code()} ${response.errorBody()!!.string()}"
                         )
+                        Toast.makeText(
+                            applicationContext,
+                            "Error: ${response.code()} ${response.errorBody()!!.string()}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             })
