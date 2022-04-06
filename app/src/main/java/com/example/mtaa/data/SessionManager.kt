@@ -31,6 +31,10 @@ class SessionManager(context: Context) {
         editor.apply()
     }
 
+    fun isUserLoggedIn(): Boolean {
+        return fetchAuthToken() != null
+    }
+
     fun saveUserId(id: String) {
         val editor = prefs.edit()
         editor.putString(USER_ID, id)
@@ -51,13 +55,13 @@ class SessionManager(context: Context) {
         return prefs.getString(USER_EMAIL, null)
     }
 
-    fun saveProfilePicture(picture: String) {
+    fun saveProfilePicturePath(picture: String) {
         val editor = prefs.edit()
         editor.putString(PROFILE_PICTURE, picture)
         editor.apply()
     }
 
-    fun fetchProfilePicture(): String? {
+    fun fetchProfilePicturePath(): String? {
         return prefs.getString(PROFILE_PICTURE, null)
     }
 

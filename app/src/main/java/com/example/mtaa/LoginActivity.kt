@@ -32,8 +32,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        sessionManager = SessionManager(this)
-
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
         etEmail = findViewById(R.id.etEmail)
@@ -103,6 +101,14 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        sessionManager = SessionManager(this)
+        if (sessionManager.isUserLoggedIn()) {
+            switchActivity(MainActivity::class.java, true)
+        }
     }
 
     private fun switchActivity(targetActivity: Class<*>, finishCurrent: Boolean = false) {
