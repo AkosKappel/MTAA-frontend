@@ -3,11 +3,15 @@ package com.example.mtaa
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.CalendarView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mtaa.adapters.MeetingsAdapter
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.MeetingResponse
 import com.example.mtaa.utilities.Utils
@@ -19,6 +23,8 @@ import java.util.*
 class CalendarActivity : AppCompatActivity() {
 
     private lateinit var cvCalendar: CalendarView
+    private lateinit var rvMeetings: RecyclerView
+    private lateinit var tvEmpty: TextView
     private lateinit var btnHome: TextView
     private lateinit var btnBack: ImageView
     private lateinit var btnProfile: ImageView
@@ -34,15 +40,17 @@ class CalendarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_calendar)
 
         cvCalendar = findViewById(R.id.cvCalendar)
+        rvMeetings = findViewById(R.id.rvMeetings)
+        tvEmpty = findViewById(R.id.rvEmpty)
         btnHome = findViewById(R.id.btnHome)
         btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
 
-        getMeetings()
+        fetchMeetings()
 
-        cvCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            getMeetingsOnDate(year, month, dayOfMonth)
-            // TODO: add meetings on selected date into recycler view
+        cvCalendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val selectedMeetings = getMeetingsOnDate(year, month, dayOfMonth)
+            showMeetings(selectedMeetings)
         }
 
         btnHome.setOnClickListener {
@@ -58,7 +66,7 @@ class CalendarActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
     }
 
-    private fun getMeetings() {
+    private fun fetchMeetings() {
         ApiClient.getApiService(applicationContext)
             .getMeetings()
             .enqueue(object : Callback<List<MeetingResponse>> {
@@ -74,7 +82,14 @@ class CalendarActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         allMeetings = response.body()!!
                         Log.d(TAG, "Received ${allMeetings.size} meetings")
-                        // TODO: add today's meetings into recycler view
+                        Calendar.getInstance().apply {
+                            val selectedMeetings = getMeetingsOnDate(
+                                get(Calendar.YEAR),
+                                get(Calendar.MONTH),
+                                get(Calendar.DAY_OF_MONTH)
+                            )
+                            showMeetings(selectedMeetings)
+                        }
                     } else {
                         Log.d(TAG, response.errorBody().toString())
                         Toast.makeText(
@@ -95,7 +110,21 @@ class CalendarActivity : AppCompatActivity() {
             val meetingDay = calendar.get(Calendar.DAY_OF_MONTH)
             meetingYear == year && meetingMonth == month && meetingDay == day
         }
+
+        if (meetingsOnDate.isEmpty()) {
+            rvMeetings.visibility = View.GONE;
+            tvEmpty.visibility = View.VISIBLE;
+        } else {
+            rvMeetings.visibility = View.VISIBLE;
+            tvEmpty.visibility = View.GONE;
+        }
+
         return meetingsOnDate
+    }
+
+    private fun showMeetings(meetings: List<MeetingResponse>) {
+        rvMeetings.layoutManager = LinearLayoutManager(applicationContext)
+        rvMeetings.adapter = MeetingsAdapter(meetings)
     }
 
 }

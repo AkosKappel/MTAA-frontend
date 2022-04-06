@@ -40,7 +40,7 @@ class ProfileActivity : AppCompatActivity() {
         tvUserEmail = findViewById(R.id.tvEmailText)
         tvUserDate = findViewById(R.id.tvRegistrationDateText)
 
-        getUserData()
+        fetchUser()
 
         btnHome.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
@@ -62,7 +62,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun getUserData() {
+    private fun fetchUser() {
         ApiClient.getApiService(applicationContext)
             .getUser()
             .enqueue(object : Callback<UserResponse> {
