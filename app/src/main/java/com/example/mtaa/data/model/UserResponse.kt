@@ -10,5 +10,5 @@ import java.util.*
 data class UserResponse(
     val id: String,
     val email: String,
-//    val created_at: String
+//    val createdAt: String
 )

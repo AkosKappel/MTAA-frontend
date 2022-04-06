@@ -49,31 +49,8 @@ class ScheduleMeetActivity : AppCompatActivity() {
         }
 
         btnProfile.setOnClickListener {
-            ApiClient.getApiService(applicationContext)
-                .getUser()
-                .enqueue(object : Callback<UserResponse> {
-                    override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                        Log.d(TAG, "onFailure: $t")
-                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-                    }
-
-                    override fun onResponse(
-                        call: Call<UserResponse>,
-                        response: Response<UserResponse>
-                    ) {
-                        val user = response.body()
-                        if (user != null) {
-                            val intent = Intent(applicationContext, ProfileActivity::class.java)
-                            intent.putExtra("id", user.id)
-                            intent.putExtra("email", user.email)
-                            startActivity(intent)
-                        } else {
-                            Log.d(TAG, "onResponse: null")
-                            Toast.makeText(applicationContext, "User not found", Toast.LENGTH_LONG)
-                                .show()
-                        }
-                    }
-                })
+            val intent = Intent(applicationContext, ProfileActivity::class.java)
+            startActivity(intent)
         }
 
     }

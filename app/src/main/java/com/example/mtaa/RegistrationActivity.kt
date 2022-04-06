@@ -27,6 +27,7 @@ class RegistrationActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG: String = "RegistrationActivity"
+        private val emailPattern: Regex = "^[.\\w-]+@([\\w-]+\\.)+[\\w-]{2,4}$".toRegex()
         private const val minPasswordLength: Int = 2
     }
 
@@ -55,7 +56,6 @@ class RegistrationActivity : AppCompatActivity() {
                 etEmail.requestFocus()
                 return@setOnClickListener
             }
-            val emailPattern: Regex = "^[.\\w-]+@([\\w-]+\\.)+[\\w-]{2,4}$".toRegex()
             if (!email.matches(emailPattern)) {
                 etEmail.error = "Email is not valid"
                 etEmail.requestFocus()
