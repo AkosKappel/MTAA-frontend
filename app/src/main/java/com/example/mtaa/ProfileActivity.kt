@@ -13,9 +13,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var btnCalendar: Button
     private lateinit var btnHome: TextView
     private lateinit var btnBack: ImageView
-    private lateinit var btnProfile: ImageView
     private lateinit var tvUserId: TextView
     private lateinit var tvUserEmail: TextView
+    private lateinit var tvUserDate: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,10 +24,10 @@ class ProfileActivity : AppCompatActivity() {
         btnUpdateProfile = findViewById(R.id.btnUpdateProfile)
         btnCalendar = findViewById(R.id.btnCalendar)
         btnHome = findViewById(R.id.btnHome)
-        btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
         tvUserId = findViewById(R.id.tvUserIDText)
         tvUserEmail = findViewById(R.id.tvEmailText)
+        tvUserDate = findViewById(R.id.tvRegistrationDateText)
 
         btnHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -36,11 +36,6 @@ class ProfileActivity : AppCompatActivity() {
 
         btnBack.setOnClickListener {
             finish()
-        }
-
-        btnProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
         }
 
         btnUpdateProfile.setOnClickListener {
@@ -55,7 +50,9 @@ class ProfileActivity : AppCompatActivity() {
 
         val userId = intent.getStringExtra("id").toString()
         val userEmail = intent.getStringExtra("email").toString()
+//        val userCreatedAt = intent.getStringExtra("created_at").toString()
         tvUserId.text = userId
         tvUserEmail.text = userEmail
+//        tvUserDate.text = userCreatedAt
     }
 }
