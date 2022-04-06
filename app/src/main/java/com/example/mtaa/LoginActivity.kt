@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.data.SessionManager
 import com.example.mtaa.data.model.TokenData
+import com.example.mtaa.utilities.Utils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,6 +32,16 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // init env variables
+        assets.open("env").bufferedReader().use {
+            val env = mutableMapOf<String, String>()
+            it.forEachLine { line ->
+                val (key, value) = line.split("=")
+                env[key] = value
+            }
+            Utils.env = env
+        }
 
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
