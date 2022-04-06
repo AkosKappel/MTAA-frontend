@@ -83,10 +83,10 @@ class LoginActivity : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         val loginResponse: TokenData? = response.body()
-                        if (response.isSuccessful && loginResponse != null) {
+                        if (loginResponse != null) {
                             sessionManager.saveAuthToken(loginResponse.accessToken)
                             switchActivity(MainActivity::class.java, true)
-                        } else if (response.code() == 401) {
+                        } else {
                             try {
                                 val jObjError = JSONObject(response.errorBody()!!.string())
                                 val detail = jObjError.getString("detail").toString()
@@ -98,17 +98,16 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG)
                                     .show()
                             }
-                        } else {
-                            Log.d(
-                                TAG,
-                                "onResponse: ${response.code()} ${response.errorBody()!!.string()}"
-                            )
-                            Toast.makeText(
-                                applicationContext,
-                                "Error: ${response.code()} ${response.errorBody()!!.string()}",
-                                Toast.LENGTH_SHORT
-                            ).show()
                         }
+                    } else {
+                        val detail = "Invalid credentials"
+                        etPassword.error = detail
+                        etPassword.requestFocus()
+                        Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
+                        Log.d(
+                            TAG,
+                            "onResponse: ${response.code()} ${response.errorBody()!!.string()}"
+                        )
                     }
                 }
             })

@@ -27,9 +27,7 @@ interface ApiInterface {
 //    ): Call<UserResponse>
 
     @GET("/users")
-    fun getUser(
-        @Field("email") email: String? = null,
-    ): Call<User>
+    fun getUser(): Call<UserResponse>
 
     @PUT("/users")
     fun updateUser(

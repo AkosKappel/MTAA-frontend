@@ -14,6 +14,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var btnHome: TextView
     private lateinit var btnBack: ImageView
     private lateinit var btnProfile: ImageView
+    private lateinit var tvUserId: TextView
+    private lateinit var tvUserEmail: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,8 @@ class ProfileActivity : AppCompatActivity() {
         btnHome = findViewById(R.id.btnHome)
         btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
+        tvUserId = findViewById(R.id.tvUserIDText)
+        tvUserEmail = findViewById(R.id.tvEmailText)
 
         btnHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -49,5 +53,9 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val userId = intent.getStringExtra("id").toString()
+        val userEmail = intent.getStringExtra("email").toString()
+        tvUserId.text = userId
+        tvUserEmail.text = userEmail
     }
 }
