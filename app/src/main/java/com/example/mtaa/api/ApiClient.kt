@@ -8,8 +8,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    //    private const val BASE_URL = "http://147.175.176.72:8000"
-//    private const val BASE_URL = "http://147.175.176.85:8000"
     private val BASE_URL = Utils.env?.get("BASE_URL")!!
     private var retrofit: Retrofit? = null
 
