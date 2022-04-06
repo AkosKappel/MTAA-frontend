@@ -47,10 +47,6 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnBack.setOnClickListener {
-            finish()
-        }
-
         btnUpdateProfile.setOnClickListener {
             val intent = Intent(applicationContext, UpdateProfileActivity::class.java)
             startActivity(intent)
@@ -60,6 +56,8 @@ class ProfileActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, CalendarActivity::class.java)
             startActivity(intent)
         }
+
+        btnBack.setOnClickListener { finish() }
     }
 
     private fun fetchUser() {

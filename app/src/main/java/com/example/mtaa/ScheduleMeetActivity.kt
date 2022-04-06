@@ -4,15 +4,20 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 
 class ScheduleMeetActivity : AppCompatActivity() {
 
     private lateinit var btnManageUsers: Button
+    private lateinit var btnCreateMeeting: Button
     private lateinit var btnHome: TextView
     private lateinit var btnBack: ImageView
     private lateinit var btnProfile: ImageView
+    private lateinit var etTitle: EditText
+    private lateinit var etTime: EditText
+    private lateinit var etDuration: EditText
 
     companion object {
         private const val TAG: String = "ScheduleMeetActivity"
@@ -23,22 +28,50 @@ class ScheduleMeetActivity : AppCompatActivity() {
         setContentView(R.layout.activity_schedule_meet)
 
         btnManageUsers = findViewById(R.id.btnManageUsers)
+        btnCreateMeeting = findViewById(R.id.btnCreateMeeting)
         btnHome = findViewById(R.id.btnHome)
         btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
+        etTitle = findViewById(R.id.etTitle)
+        etTime = findViewById(R.id.etTime)
+        etDuration = findViewById(R.id.etDuration)
 
         btnManageUsers.setOnClickListener {
-            val intent = Intent(this, ManageUsersActivity::class.java)
+            val intent = Intent(applicationContext, ManageUsersActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnCreateMeeting.setOnClickListener {
+            val title = etTitle.text.toString().trim()
+            if (title.isEmpty()) {
+                etTitle.error = "Title is required"
+                etTitle.requestFocus()
+                return@setOnClickListener
+            }
+
+            val time = etTime.text.toString().trim()
+            if (time.isEmpty()) {
+                etTime.error = "Time is required"
+                etTime.requestFocus()
+                return@setOnClickListener
+            }
+
+            val duration = etDuration.text.toString().trim()
+            if (duration.isEmpty()) {
+                etDuration.error = "Duration is required"
+                etDuration.requestFocus()
+                return@setOnClickListener
+            }
+
+            // TODO: Create meeting
+
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
         }
 
         btnHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
-        }
-
-        btnBack.setOnClickListener {
-            finish()
         }
 
         btnProfile.setOnClickListener {
@@ -46,5 +79,6 @@ class ScheduleMeetActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btnBack.setOnClickListener { finish() }
     }
 }

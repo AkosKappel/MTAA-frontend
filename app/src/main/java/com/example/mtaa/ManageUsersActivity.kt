@@ -34,13 +34,11 @@ class ManageUsersActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnBack.setOnClickListener {
-            finish()
-        }
-
         btnProfile.setOnClickListener {
             val intent = Intent(applicationContext, ProfileActivity::class.java)
             startActivity(intent)
         }
+
+        btnBack.setOnClickListener { finish() }
     }
 }

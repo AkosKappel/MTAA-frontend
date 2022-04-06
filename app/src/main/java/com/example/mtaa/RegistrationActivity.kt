@@ -43,10 +43,6 @@ class RegistrationActivity : AppCompatActivity() {
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
         btnBack = findViewById(R.id.btnBack)
 
-        btnBack.setOnClickListener {
-            finish()
-        }
-
         btnRegister.setOnClickListener {
             // get and validate user input
             // email
@@ -92,6 +88,8 @@ class RegistrationActivity : AppCompatActivity() {
             val newUser = UserToRegister(email, password)
             registerUser(newUser)
         }
+
+        btnBack.setOnClickListener { finish() }
     }
 
     private fun registerUser(newUser: UserToRegister) {
