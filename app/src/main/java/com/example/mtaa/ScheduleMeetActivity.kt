@@ -3,16 +3,9 @@ package com.example.mtaa
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import com.example.mtaa.api.ApiClient
-import com.example.mtaa.data.model.UserResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ScheduleMeetActivity : AppCompatActivity() {
 

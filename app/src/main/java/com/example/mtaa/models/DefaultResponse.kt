@@ -1,4 +1,4 @@
-package com.example.mtaa.data.model
+package com.example.mtaa.models
 
 data class DefaultResponse(
     val code: Int,

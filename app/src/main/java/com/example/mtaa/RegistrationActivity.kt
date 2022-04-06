@@ -6,9 +6,9 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
-import com.example.mtaa.data.SessionManager
-import com.example.mtaa.data.model.User
-import com.example.mtaa.data.model.UserResponse
+import com.example.mtaa.storage.SessionManager
+import com.example.mtaa.models.UserToRegister
+import com.example.mtaa.models.UserResponse
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -89,12 +89,12 @@ class RegistrationActivity : AppCompatActivity() {
             }
 
             // register user
-            val newUser = User(email, password)
+            val newUser = UserToRegister(email, password)
             registerUser(newUser)
         }
     }
 
-    private fun registerUser(newUser: User) {
+    private fun registerUser(newUser: UserToRegister) {
         ApiClient.getApiService(applicationContext)
             .registerUser(newUser)
             .enqueue(object : Callback<UserResponse> {

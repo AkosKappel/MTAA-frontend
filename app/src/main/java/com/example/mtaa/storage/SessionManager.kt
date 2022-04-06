@@ -1,4 +1,4 @@
-package com.example.mtaa.data
+package com.example.mtaa.storage
 
 import android.content.Context
 import android.content.SharedPreferences

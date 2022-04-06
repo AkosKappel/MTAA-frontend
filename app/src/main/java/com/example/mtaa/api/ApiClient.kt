@@ -2,6 +2,7 @@ package com.example.mtaa.api
 
 import android.content.Context
 import com.example.mtaa.utilities.Utils
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,13 +13,16 @@ object ApiClient {
     private var retrofit: Retrofit? = null
 
     private fun getClient(context: Context): Retrofit {
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()
+
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okhttpClient(context))
                 .build()
         }
+
         return retrofit!!
     }
 

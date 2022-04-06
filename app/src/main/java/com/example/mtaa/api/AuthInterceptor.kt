@@ -1,7 +1,7 @@
 package com.example.mtaa.api
 
 import android.content.Context
-import com.example.mtaa.data.SessionManager
+import com.example.mtaa.storage.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Response
 

@@ -1,8 +1,4 @@
-package com.example.mtaa.data.model
-
-import java.text.SimpleDateFormat
-import java.time.DateTimeException
-import java.util.*
+package com.example.mtaa.models
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

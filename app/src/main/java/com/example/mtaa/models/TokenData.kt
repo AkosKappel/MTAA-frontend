@@ -1,4 +1,4 @@
-package com.example.mtaa.data.model
+package com.example.mtaa.models
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,6 +1,6 @@
 package com.example.mtaa.api
 
-import com.example.mtaa.data.model.*
+import com.example.mtaa.models.*
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -9,7 +9,7 @@ interface ApiInterface {
 
     @POST("/register")
     fun registerUser(
-        @Body user: User
+        @Body user: UserToRegister
     ): Call<UserResponse>
 
     @FormUrlEncoded
@@ -31,14 +31,14 @@ interface ApiInterface {
 
     @PUT("/users")
     fun updateUser(
-        @Body user: User
+        @Body user: UserToRegister
     ): Call<UserResponse>
 
     @DELETE("/users")
     fun deleteUser(): Call<Response<Void>>
 
     @GET("/users/calls")
-    fun getCalls(): Call<CallResponse>
+    fun getMeetings(): Call<List<MeetingResponse>>
 
 //    @POST("/users/calls")
 //    fun createCall(

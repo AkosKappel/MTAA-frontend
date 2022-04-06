@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.example.mtaa.api.ApiClient
-import com.example.mtaa.data.model.UserResponse
+import com.example.mtaa.models.UserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

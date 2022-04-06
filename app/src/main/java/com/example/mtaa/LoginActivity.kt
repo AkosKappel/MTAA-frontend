@@ -8,8 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
-import com.example.mtaa.data.SessionManager
-import com.example.mtaa.data.model.TokenData
+import com.example.mtaa.storage.SessionManager
+import com.example.mtaa.models.TokenData
 import com.example.mtaa.utilities.Utils
 import org.json.JSONObject
 import retrofit2.Call
