@@ -3,9 +3,7 @@ package com.example.mtaa
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.data.SessionManager
@@ -25,6 +23,7 @@ class RegistrationActivity : AppCompatActivity() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
+    private lateinit var btnBack: ImageView
 
     companion object {
         private const val TAG: String = "RegistrationActivity"
@@ -41,6 +40,11 @@ class RegistrationActivity : AppCompatActivity() {
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         etConfirmPassword = findViewById(R.id.etConfirmPassword)
+        btnBack = findViewById(R.id.btnBack)
+
+        btnBack.setOnClickListener {
+            finish()
+        }
 
         btnRegister.setOnClickListener {
             // get and validate user input

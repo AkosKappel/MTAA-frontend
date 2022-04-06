@@ -3,6 +3,8 @@ package com.example.mtaa
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.data.SessionManager
 
@@ -15,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnCalendar: Button
     private lateinit var btnManageContacts: Button
     private lateinit var btnLogOut: Button
+    private lateinit var btnHome: TextView
+    private lateinit var btnProfile: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         btnCalendar = findViewById(R.id.btnCalendar)
         btnManageContacts = findViewById(R.id.btnManageContacts)
         btnLogOut = findViewById(R.id.btnLogOut)
+        btnProfile = findViewById(R.id.btnProfile)
+        
+        btnProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
 
         // set onClickListeners
         btnStartCall.setOnClickListener {

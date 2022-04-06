@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
             loginUser(email, password)
         }
 
-        btnRegister.setOnClickListener { switchActivity(RegistrationActivity::class.java, true) }
+        btnRegister.setOnClickListener { switchActivity(RegistrationActivity::class.java, false) }
     }
 
     // login logic

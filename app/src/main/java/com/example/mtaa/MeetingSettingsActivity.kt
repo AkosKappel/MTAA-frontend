@@ -4,12 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 
 class MeetingSettingsActivity : AppCompatActivity() {
 
     private lateinit var btnManageUsers: Button
     private lateinit var btnDeleteMeeting: Button
     private lateinit var btnSaveChanges: Button
+    private lateinit var btnHome: TextView
+    private lateinit var btnBack: ImageView
+    private lateinit var btnProfile: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +23,23 @@ class MeetingSettingsActivity : AppCompatActivity() {
         btnManageUsers = findViewById(R.id.btnManageUsers)
         btnDeleteMeeting = findViewById(R.id.btnDeleteMeeting)
         btnSaveChanges = findViewById(R.id.btnSaveChanges)
+        btnHome = findViewById(R.id.btnHome)
+        btnProfile = findViewById(R.id.btnProfile)
+        btnBack = findViewById(R.id.btnBack)
 
+        btnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnBack.setOnClickListener {
+            finish()
+        }
+
+        btnProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
 
         btnManageUsers.setOnClickListener {
             val intent = Intent(this, ManageUsersActivity::class.java)
