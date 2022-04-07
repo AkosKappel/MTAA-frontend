@@ -1,28 +1,33 @@
 package com.example.mtaa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
+import com.example.mtaa.models.MeetingResponse
 import com.example.mtaa.models.UserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var btnUpdateProfile: Button
-    private lateinit var btnCalendar: Button
+    // toolbar elements
     private lateinit var btnHome: TextView
     private lateinit var btnBack: ImageView
+
+    // window elements
     private lateinit var tvUserId: TextView
     private lateinit var tvUserEmail: TextView
     private lateinit var tvUserDate: TextView
+    private lateinit var btnUpdateProfile: Button
+    private lateinit var btnCalendar: Button
 
     companion object {
         private const val TAG: String = "ProfileActivity"
@@ -65,24 +70,41 @@ class ProfileActivity : AppCompatActivity() {
             .getUser()
             .enqueue(object : Callback<UserResponse> {
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    Log.d(TAG, t.message.toString())
-                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                    handleFailure(t)
                 }
 
                 override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
+                    call: Call<UserResponse>, response: Response<UserResponse>
                 ) {
-                    val user = response.body()
-                    val userId = user?.id ?: "ID not found"
-                    val userEmail = user?.email ?: "Email not found"
-//                    val userRegistrationDate = user?.createdAt ?: "Registration date not found"
-
-                    // set fields
-                    tvUserId.text = userId
-                    tvUserEmail.text = userEmail
-//                    tvUserDate.text = userRegistrationDate
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
                 }
             })
+    }
+
+    private fun handleSuccessfulResponse(response: Response<UserResponse>) {
+        val user = response.body()
+        val userId = user?.id ?: "ID not found"
+        val userEmail = user?.email ?: "Email not found"
+//        val userRegistrationDate = user?.createdAt ?: "Registration date not found"
+
+        // set fields
+        tvUserId.text = userId
+        tvUserEmail.text = userEmail
+//        tvUserDate.text = userRegistrationDate
+    }
+
+    private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleFailure(t: Throwable) {
+        Log.d(TAG, "onFailure: ${t.message.toString()}")
+        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
 }

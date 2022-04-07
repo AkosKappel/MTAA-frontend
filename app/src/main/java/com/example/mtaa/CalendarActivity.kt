@@ -71,35 +71,43 @@ class CalendarActivity : AppCompatActivity() {
             .getMeetings()
             .enqueue(object : Callback<List<MeetingResponse>> {
                 override fun onFailure(call: Call<List<MeetingResponse>>, t: Throwable) {
-                    Log.d(TAG, t.message.toString())
-                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                    handleFailure(t)
                 }
 
                 override fun onResponse(
-                    call: Call<List<MeetingResponse>>,
-                    response: Response<List<MeetingResponse>>
+                    call: Call<List<MeetingResponse>>, response: Response<List<MeetingResponse>>
                 ) {
                     if (response.isSuccessful) {
-                        allMeetings = response.body()!!
-                        Log.d(TAG, "Received ${allMeetings.size} meetings")
-                        Calendar.getInstance().apply {
-                            val selectedMeetings = getMeetingsOnDate(
-                                get(Calendar.YEAR),
-                                get(Calendar.MONTH),
-                                get(Calendar.DAY_OF_MONTH)
-                            )
-                            showMeetings(selectedMeetings)
-                        }
+                        handleSuccessfulResponse(response)
                     } else {
-                        Log.d(TAG, response.errorBody().toString())
-                        Toast.makeText(
-                            applicationContext,
-                            response.errorBody().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        handleNotSuccessfulResponse(response)
                     }
                 }
             })
+    }
+
+    private fun handleSuccessfulResponse(response: Response<List<MeetingResponse>>) {
+        allMeetings = response.body()!!
+        Log.d(TAG, "Received ${allMeetings.size} meetings")
+        Calendar.getInstance().apply {
+            val selectedMeetings = getMeetingsOnDate(
+                get(Calendar.YEAR),
+                get(Calendar.MONTH),
+                get(Calendar.DAY_OF_MONTH)
+            )
+            showMeetings(selectedMeetings)
+        }
+    }
+
+    private fun handleNotSuccessfulResponse(response: Response<List<MeetingResponse>>) {
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleFailure(t: Throwable) {
+        Log.d(TAG, "onFailure: ${t.message.toString()}")
+        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
 
     private fun getMeetingsOnDate(year: Int, month: Int, day: Int): List<MeetingResponse> {
@@ -112,11 +120,11 @@ class CalendarActivity : AppCompatActivity() {
         }
 
         if (meetingsOnDate.isEmpty()) {
-            rvMeetings.visibility = View.GONE;
-            tvEmpty.visibility = View.VISIBLE;
+            rvMeetings.visibility = View.GONE
+            tvEmpty.visibility = View.VISIBLE
         } else {
-            rvMeetings.visibility = View.VISIBLE;
-            tvEmpty.visibility = View.GONE;
+            rvMeetings.visibility = View.VISIBLE
+            tvEmpty.visibility = View.GONE
         }
 
         return meetingsOnDate
@@ -126,5 +134,4 @@ class CalendarActivity : AppCompatActivity() {
         rvMeetings.layoutManager = LinearLayoutManager(applicationContext)
         rvMeetings.adapter = MeetingsAdapter(meetings)
     }
-
 }

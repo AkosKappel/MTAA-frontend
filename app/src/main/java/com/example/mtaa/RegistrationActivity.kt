@@ -66,33 +66,14 @@ class RegistrationActivity : AppCompatActivity() {
             .registerUser(newUser)
             .enqueue(object : Callback<UserResponse> {
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    Log.d(TAG, "onFailure: $t")
-                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                    handleFailure(t)
                 }
 
                 override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
+                    call: Call<UserResponse>, response: Response<UserResponse>
                 ) {
                     if (response.isSuccessful) {
-                        val registeredUser: UserResponse? = response.body()
-                        if (registeredUser != null) {
-                            Toast.makeText(
-                                applicationContext,
-                                "User registered successfully", Toast.LENGTH_LONG
-                            ).show()
-
-                            // save user to shared preferences
-                            sessionManager.saveUserId(registeredUser.id)
-                            sessionManager.saveUserEmail(registeredUser.email)
-
-                            // TODO login user
-
-                            // go to home activity
-                            val intent = Intent(applicationContext, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
+                        handleSuccessfulResponse(response)
                     } else if (response.code() == 400) {
                         try {
                             val jObjError = JSONObject(response.errorBody()!!.string())
@@ -117,17 +98,41 @@ class RegistrationActivity : AppCompatActivity() {
                             Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        Log.d(
-                            TAG,
-                            "onResponse: ${response.code()} ${response.errorBody()!!.string()}"
-                        )
-                        Toast.makeText(
-                            applicationContext,
-                            "Error: ${response.code()} ${response.errorBody()!!.string()}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        handleNotSuccessfulResponse(response)
                     }
                 }
             })
+    }
+
+    private fun handleSuccessfulResponse(response: Response<UserResponse>) {
+        val registeredUser: UserResponse? = response.body()
+        if (registeredUser != null) {
+            Toast.makeText(
+                applicationContext,
+                "User registered successfully", Toast.LENGTH_LONG
+            ).show()
+
+            // save user to shared preferences
+            sessionManager.saveUserId(registeredUser.id)
+            sessionManager.saveUserEmail(registeredUser.email)
+
+            // TODO login user
+
+            // go to home activity
+            val intent = Intent(applicationContext, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleFailure(t: Throwable) {
+        Log.d(TAG, "onFailure: ${t.message.toString()}")
+        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
 }

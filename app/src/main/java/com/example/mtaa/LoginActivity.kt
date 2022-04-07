@@ -61,41 +61,16 @@ class LoginActivity : AppCompatActivity() {
             .loginUser(email, password)
             .enqueue(object : Callback<TokenData> {
                 override fun onFailure(call: Call<TokenData>, t: Throwable) {
-                    Log.d(TAG, "onFailure: ${t.message.toString()}")
-                    Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
+                    handleFailure(t)
                 }
 
                 override fun onResponse(
-                    call: Call<TokenData>,
-                    response: Response<TokenData>
+                    call: Call<TokenData>, response: Response<TokenData>
                 ) {
                     if (response.isSuccessful) {
-                        val loginResponse: TokenData? = response.body()
-                        if (loginResponse != null) {
-                            saveLoggedInUserData(email, loginResponse.accessToken)
-                            switchActivity(MainActivity::class.java, true)
-                        } else {
-                            try {
-                                val jObjError = JSONObject(response.errorBody()!!.string())
-                                val detail = jObjError.getString("detail").toString()
-                                if (detail.contains("password", true)) {
-                                    etPassword.error = detail
-                                    etPassword.requestFocus()
-                                }
-                            } catch (e: Exception) {
-                                Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG)
-                                    .show()
-                            }
-                        }
+                        handleSuccessfulResponse(response, email)
                     } else {
-                        val detail = "Invalid credentials"
-                        etEmail.error = detail
-                        etPassword.error = detail
-                        Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
-                        Log.d(
-                            TAG,
-                            "onResponse: ${response.code()} ${response.errorBody()!!.string()}"
-                        )
+                        handleNotSuccessfulResponse(response)
                     }
                 }
             })
@@ -121,5 +96,40 @@ class LoginActivity : AppCompatActivity() {
         if (sessionManager.isUserLoggedIn()) {
             switchActivity(MainActivity::class.java, true)
         }
+    }
+
+    private fun handleSuccessfulResponse(response: Response<TokenData>, email: String) {
+        val loginResponse: TokenData? = response.body()
+        if (loginResponse != null) {
+            saveLoggedInUserData(email, loginResponse.accessToken)
+            switchActivity(MainActivity::class.java, true)
+        } else {
+            try {
+                val jObjError = JSONObject(response.errorBody()!!.string())
+                val detail = jObjError.getString("detail").toString()
+                if (detail.contains("password", true)) {
+                    etPassword.error = detail
+                    etPassword.requestFocus()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    private fun handleNotSuccessfulResponse(response: Response<TokenData>) {
+        val detail = "Invalid credentials"
+        etEmail.error = detail
+        etPassword.error = detail
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleFailure(t: Throwable) {
+        Log.d(TAG, "onFailure: ${t.message.toString()}")
+        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
 }

@@ -1,12 +1,13 @@
 package com.example.mtaa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.example.mtaa.utilities.Utils
 
 class ScheduleMeetActivity : AppCompatActivity() {
 
@@ -42,27 +43,12 @@ class ScheduleMeetActivity : AppCompatActivity() {
         }
 
         btnCreateMeeting.setOnClickListener {
-            val title = etTitle.text.toString().trim()
-            if (title.isEmpty()) {
-                etTitle.error = "Title is required"
-                etTitle.requestFocus()
+            if (!Utils.validateTitle(etTitle) ||
+                !Utils.validateTime(etTime) ||
+                !Utils.validateDuration(etDuration)
+            ) {
                 return@setOnClickListener
             }
-
-            val time = etTime.text.toString().trim()
-            if (time.isEmpty()) {
-                etTime.error = "Time is required"
-                etTime.requestFocus()
-                return@setOnClickListener
-            }
-
-            val duration = etDuration.text.toString().trim()
-            if (duration.isEmpty()) {
-                etDuration.error = "Duration is required"
-                etDuration.requestFocus()
-                return@setOnClickListener
-            }
-
             // TODO: Create meeting
 
             val intent = Intent(applicationContext, MainActivity::class.java)

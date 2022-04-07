@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.Log
+import android.widget.*
+import com.example.mtaa.api.ApiClient
+import com.example.mtaa.models.UserResponse
+import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.utilities.Utils
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UpdateProfileActivity : AppCompatActivity() {
 
@@ -57,7 +61,8 @@ class UpdateProfileActivity : AppCompatActivity() {
             }
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
-            // TODO: update profile
+            val updatedUser = UserToRegister(email, password)
+            updateUser(updatedUser)
         }
 
         btnHome.setOnClickListener {
@@ -71,5 +76,55 @@ class UpdateProfileActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener { finish() }
+    }
+
+    private fun updateUser(user: UserToRegister) {
+        ApiClient.getApiService(applicationContext)
+            .updateUser(user)
+            .enqueue(object : Callback<UserResponse> {
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<UserResponse>, response: Response<UserResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
+
+    private fun handleSuccessfulResponse(response: Response<UserResponse>) {
+        val updatedUser: UserResponse? = response.body()
+        if (updatedUser != null) {
+            sessionManager.saveUserEmail(updatedUser.email)
+            Toast.makeText(
+                applicationContext,
+                "Profile updated successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(
+                applicationContext,
+                "Profile update failed",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        finish()
+    }
+
+    private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleFailure(t: Throwable) {
+        Log.d(TAG, "onFailure: ${t.message.toString()}")
+        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
 }

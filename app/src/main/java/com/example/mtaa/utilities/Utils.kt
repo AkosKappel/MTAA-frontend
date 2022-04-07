@@ -1,7 +1,13 @@
 package com.example.mtaa.utilities
 
+import android.content.Context
 import android.content.res.AssetManager
+import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
+import com.example.mtaa.RegistrationActivity
+import com.example.mtaa.models.UserResponse
+import retrofit2.Response
 import java.util.Calendar
 import java.util.Date
 
@@ -72,4 +78,33 @@ object Utils {
         return true
     }
 
+    fun validateTitle(etTitle: EditText): Boolean {
+        val title = etTitle.text.toString().trim()
+        if (title.isEmpty()) {
+            etTitle.error = "Title is required"
+            etTitle.requestFocus()
+            return false
+        }
+        return true
+    }
+
+    fun validateTime(etTime: EditText): Boolean {
+        val time = etTime.text.toString().trim()
+        if (time.isEmpty()) {
+            etTime.error = "Time is required"
+            etTime.requestFocus()
+            return false
+        }
+        return true
+    }
+
+    fun validateDuration(etDuration: EditText): Boolean {
+        val duration = etDuration.text.toString().trim()
+        if (duration.isEmpty()) {
+            etDuration.error = "Duration is required"
+            etDuration.requestFocus()
+            return false
+        }
+        return true
+    }
 }
