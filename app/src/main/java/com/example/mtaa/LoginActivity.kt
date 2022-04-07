@@ -20,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
 
+    // login form elements
     private lateinit var btnLogin: Button
     private lateinit var btnRegister: Button
     private lateinit var etEmail: EditText
@@ -34,14 +35,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // init env variables
-        assets.open("env").bufferedReader().use {
-            val env = mutableMapOf<String, String>()
-            it.forEachLine { line ->
-                val (key, value) = line.split("=")
-                env[key] = value
-            }
-            Utils.env = env
-        }
+        sessionManager = SessionManager(this)
+        Utils.initEnv(assets)
 
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
@@ -49,22 +44,15 @@ class LoginActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
 
         btnLogin.setOnClickListener {
+            if (!Utils.validateEmail(etEmail) || !Utils.validatePassword(etPassword)) {
+                return@setOnClickListener
+            }
             val email: String = etEmail.text.toString().trim()
-            if (email.isEmpty()) {
-                etEmail.error = "Email is required"
-                etEmail.requestFocus()
-                return@setOnClickListener
-            }
             val password: String = etPassword.text.toString().trim()
-            if (password.isEmpty()) {
-                etPassword.error = "Password is required"
-                etPassword.requestFocus()
-                return@setOnClickListener
-            }
             loginUser(email, password)
         }
 
-        btnRegister.setOnClickListener { switchActivity(RegistrationActivity::class.java, false) }
+        btnRegister.setOnClickListener { switchActivity(RegistrationActivity::class.java) }
     }
 
     // login logic
@@ -73,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
             .loginUser(email, password)
             .enqueue(object : Callback<TokenData> {
                 override fun onFailure(call: Call<TokenData>, t: Throwable) {
-                    Log.d(TAG, "onFailure: $t")
+                    Log.d(TAG, "onFailure: ${t.message.toString()}")
                     Toast.makeText(applicationContext, t.message, Toast.LENGTH_SHORT).show()
                 }
 
@@ -84,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val loginResponse: TokenData? = response.body()
                         if (loginResponse != null) {
-                            sessionManager.saveAuthToken(loginResponse.accessToken)
+                            saveLoggedInUserData(email, loginResponse.accessToken)
                             switchActivity(MainActivity::class.java, true)
                         } else {
                             try {
@@ -101,8 +89,8 @@ class LoginActivity : AppCompatActivity() {
                         }
                     } else {
                         val detail = "Invalid credentials"
+                        etEmail.error = detail
                         etPassword.error = detail
-                        etPassword.requestFocus()
                         Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
                         Log.d(
                             TAG,
@@ -113,12 +101,9 @@ class LoginActivity : AppCompatActivity() {
             })
     }
 
-    override fun onStart() {
-        super.onStart()
-        sessionManager = SessionManager(this)
-        if (sessionManager.isUserLoggedIn()) {
-            switchActivity(MainActivity::class.java, true)
-        }
+    private fun saveLoggedInUserData(email: String, token: String) {
+        sessionManager.saveAuthToken(token)
+        sessionManager.saveUserEmail(email)
     }
 
     private fun switchActivity(targetActivity: Class<*>, finishCurrent: Boolean = false) {
@@ -129,4 +114,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        // check if user is already logged in
+        if (sessionManager.isUserLoggedIn()) {
+            switchActivity(MainActivity::class.java, true)
+        }
+    }
 }

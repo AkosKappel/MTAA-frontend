@@ -11,12 +11,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
 
+    // toolbar elements
+    private lateinit var btnProfile: ImageView
+
+    // main buttons
     private lateinit var btnStartCall: Button
     private lateinit var btnScheduleMeeting: Button
     private lateinit var btnCalendar: Button
     private lateinit var btnManageContacts: Button
     private lateinit var btnLogOut: Button
-    private lateinit var btnProfile: ImageView
 
     companion object {
         private const val TAG: String = "MainActivity"
@@ -63,10 +66,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnLogOut.setOnClickListener {
-            sessionManager.deleteAuthToken()
+            deleteLoggedInUserData()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }
+    }
+
+    private fun deleteLoggedInUserData() {
+        sessionManager.deleteAuthToken()
+        sessionManager.deleteUserEmail()
     }
 }

@@ -9,6 +9,7 @@ import com.example.mtaa.api.ApiClient
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.models.UserResponse
+import com.example.mtaa.utilities.Utils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,16 +20,17 @@ class RegistrationActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
 
+    // toolbar elements
+    private lateinit var btnBack: ImageView
+
+    // registration elements
     private lateinit var btnRegister: Button
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etConfirmPassword: EditText
-    private lateinit var btnBack: ImageView
 
     companion object {
         private const val TAG: String = "RegistrationActivity"
-        private val emailPattern: Regex = "^[.\\w-]+@([\\w-]+\\.)+[\\w-]{2,4}$".toRegex()
-        private const val minPasswordLength: Int = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,47 +46,14 @@ class RegistrationActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
 
         btnRegister.setOnClickListener {
-            // get and validate user input
-            // email
+            // validate user input
+            if (!Utils.validateEmail(etEmail) ||
+                !Utils.validatePassword(etPassword, etConfirmPassword)
+            ) {
+                return@setOnClickListener
+            }
             val email: String = etEmail.text.toString().trim()
-            if (email.isEmpty()) {
-                etEmail.error = "Email is required"
-                etEmail.requestFocus()
-                return@setOnClickListener
-            }
-            if (!email.matches(emailPattern)) {
-                etEmail.error = "Email is not valid"
-                etEmail.requestFocus()
-                return@setOnClickListener
-            }
-
-            // password
             val password: String = etPassword.text.toString().trim()
-            if (password.isEmpty()) {
-                etPassword.error = "Password is required"
-                etPassword.requestFocus()
-                return@setOnClickListener
-            }
-            if (password.length < minPasswordLength) {
-                etPassword.error = "Password must be at least $minPasswordLength characters"
-                etPassword.requestFocus()
-                return@setOnClickListener
-            }
-
-            // confirm password
-            val confirmPassword: String = etConfirmPassword.text.toString().trim()
-            if (confirmPassword.isEmpty()) {
-                etConfirmPassword.error = "Confirm Password is required"
-                etConfirmPassword.requestFocus()
-                return@setOnClickListener
-            }
-            if (password != confirmPassword) {
-                etConfirmPassword.error = "Password does not match"
-                etConfirmPassword.requestFocus()
-                return@setOnClickListener
-            }
-
-            // register user
             val newUser = UserToRegister(email, password)
             registerUser(newUser)
         }
@@ -116,6 +85,8 @@ class RegistrationActivity : AppCompatActivity() {
                             // save user to shared preferences
                             sessionManager.saveUserId(registeredUser.id)
                             sessionManager.saveUserEmail(registeredUser.email)
+
+                            // TODO login user
 
                             // go to home activity
                             val intent = Intent(applicationContext, MainActivity::class.java)
@@ -159,5 +130,4 @@ class RegistrationActivity : AppCompatActivity() {
                 }
             })
     }
-
 }
