@@ -90,12 +90,16 @@ class ProfileActivity : AppCompatActivity() {
         val user = response.body()
         val userId = user?.id ?: "ID not found"
         val userEmail = user?.email ?: "Email not found"
-        val userRegistrationDate = user?.created_at?.let { Utils.dateToCalendar(it).get(Calendar.DAY_OF_MONTH).toString() + '.' + (Utils.dateToCalendar(it).get(Calendar.MONTH) + 1).toString() + '.' + Utils.dateToCalendar(it).get(Calendar.YEAR).toString() } ?: "Registration date not found"
+        val userRegistrationDate = user?.created_at?.let {
+            Utils.dateToCalendar(it).get(Calendar.DAY_OF_MONTH).toString() + '.' +
+                    (Utils.dateToCalendar(it).get(Calendar.MONTH) + 1).toString() + '.' +
+                    Utils.dateToCalendar(it).get(Calendar.YEAR).toString() }
+            ?: "Registration date not found"
 
         // set fields
         tvUserId.text = userId
         tvUserEmail.text = userEmail
-        tvUserDate.text = userRegistrationDate.toString()
+        tvUserDate.text = userRegistrationDate
     }
 
     private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
