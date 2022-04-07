@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.MeetingResponse
 import com.example.mtaa.models.UserResponse
+import com.example.mtaa.utilities.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,12 +90,12 @@ class ProfileActivity : AppCompatActivity() {
         val user = response.body()
         val userId = user?.id ?: "ID not found"
         val userEmail = user?.email ?: "Email not found"
-//        val userRegistrationDate = user?.createdAt ?: "Registration date not found"
+        val userRegistrationDate = user?.created_at?.let { Utils.dateToCalendar(it).get(Calendar.DAY_OF_MONTH).toString() + '.' + (Utils.dateToCalendar(it).get(Calendar.MONTH) + 1).toString() + '.' + Utils.dateToCalendar(it).get(Calendar.YEAR).toString() } ?: "Registration date not found"
 
         // set fields
         tvUserId.text = userId
         tvUserEmail.text = userEmail
-//        tvUserDate.text = userRegistrationDate
+        tvUserDate.text = userRegistrationDate.toString()
     }
 
     private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
