@@ -78,7 +78,7 @@
                 android:layout_margin="8dp"
                 android:ems="10"
                 android:hint="Name"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
                 android:minHeight="48dp"
                 android:paddingHorizontal="16dp" />
 
@@ -89,7 +89,7 @@
                 android:layout_margin="8dp"
                 android:ems="10"
                 android:hint="Time"
-                android:inputType="textEmailAddress"
+                android:inputType="time"
                 android:minHeight="48dp"
                 android:paddingHorizontal="16dp" />
 
@@ -100,7 +100,7 @@
                 android:layout_margin="8dp"
                 android:ems="10"
                 android:hint="Duration"
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:minHeight="48dp"
                 android:paddingHorizontal="16dp" />
 
