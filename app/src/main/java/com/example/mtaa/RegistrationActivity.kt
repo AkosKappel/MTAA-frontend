@@ -117,11 +117,6 @@ class RegistrationActivity : AppCompatActivity() {
             sessionManager.saveUserId(registeredUser.id)
             sessionManager.saveUserEmail(registeredUser.email)
 
-            // go to home activity
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
             loginUser(newUser.email, newUser.password)
         }
     }
