@@ -72,11 +72,11 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-<!--            <ImageView-->
-<!--                android:id="@+id/imageView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                tools:srcCompat="@tools:sample/avatars" />-->
+            <!--            <ImageView-->
+            <!--                android:id="@+id/imageView"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                tools:srcCompat="@tools:sample/avatars" />-->
 
             <TextView
                 android:id="@+id/tvUserID"
@@ -96,7 +96,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:gravity="start"
-                android:text="12"
+                android:text="0"
                 android:textSize="20sp" />
 
             <TextView
@@ -117,7 +117,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:gravity="start"
-                android:text="stefan@gmail.com"
+                android:text="...@email.com"
                 android:textSize="20sp" />
 
             <TextView
@@ -138,8 +138,8 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:gravity="start"
-                android:text="28.02.2022"
-                android:textSize="20sp"/>
+                android:text="dd.mm.yyyy"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/btnUpdateProfile"
@@ -158,8 +158,8 @@
                 android:id="@+id/btnCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginVertical="8dp"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
                 android:text="Calendar"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

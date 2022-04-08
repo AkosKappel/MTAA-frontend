@@ -65,7 +65,7 @@ interface ApiInterface {
     // ----------------------
 
     @GET("/calls/{call_id}/users")
-    fun getMeetingUsers(
+    fun getUsersInMeeting(
         @Path("call_id") call_id: Int
     ): Call<List<Contact>>
 

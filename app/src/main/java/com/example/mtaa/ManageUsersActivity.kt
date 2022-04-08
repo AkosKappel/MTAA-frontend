@@ -53,11 +53,14 @@ class ManageUsersActivity : AppCompatActivity() {
         btnRemoveUser = findViewById(R.id.btnRemoveUser)
         btnAddUser = findViewById(R.id.btnAddUser)
 
+        allUsers = ArrayList()
+        allContacts = ArrayList()
         selectedMeeting = intent.getSerializableExtra("meeting") as MeetingResponse
 
+//        allUsers = selectedMeeting.users
+//        showUsers()
+        fetchUsers()
         fetchContacts()
-        allUsers = selectedMeeting.users
-        showUsers()
 
         btnHome.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
@@ -151,25 +154,25 @@ class ManageUsersActivity : AppCompatActivity() {
             })
     }
 
-//    private fun fetchUsers() {
-//        ApiClient.getApiService(applicationContext)
-//            .getUsersOfCall(selectedMeeting.id)
-//            .enqueue(object : Callback<List<ContactList>> {
-//                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-//                    handleFailure(t)
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        handleSuccessfulResponse(response)
-//                    } else {
-//                        handleNotSuccessfulResponse(response)
-//                    }
-//                }
-//            })
-//    }
+    private fun fetchUsers() {
+        ApiClient.getApiService(applicationContext)
+            .getUsersInMeeting(selectedMeeting.id)
+            .enqueue(object : Callback<List<Contact>> {
+                override fun onFailure(call: Call<List<Contact>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<Contact>>, response: Response<List<Contact>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponseUsers(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
 
     private fun handleSuccessfulResponseContacts(response: Response<List<Contact>>) {
         allContacts = response.body()!!
@@ -218,5 +221,4 @@ class ManageUsersActivity : AppCompatActivity() {
             }
         })
     }
-
 }

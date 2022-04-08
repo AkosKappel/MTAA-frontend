@@ -134,7 +134,10 @@ class MeetingSettingsActivity : AppCompatActivity() {
                     handleFailure(t)
                 }
 
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                override fun onResponse(
+                    call: Call<Void>,
+                    response: Response<Void>
+                ) {
                     if (response.isSuccessful) {
                         handleSuccessfulResponseDelete(response)
                     } else {
@@ -150,9 +153,6 @@ class MeetingSettingsActivity : AppCompatActivity() {
             val msg = "Meeting updated successfully"
             Log.d(TAG, msg)
             Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(applicationContext, CalendarActivity::class.java)
-            startActivity(intent)
             finish()
         } else {
             val msg = "Meeting update failed"
@@ -173,9 +173,6 @@ class MeetingSettingsActivity : AppCompatActivity() {
         val msg = "Meeting deleted successfully"
         Log.d(TAG, msg)
         Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
-
-        val intent = Intent(applicationContext, CalendarActivity::class.java)
-        startActivity(intent)
         finish()
     }
 
@@ -189,6 +186,8 @@ class MeetingSettingsActivity : AppCompatActivity() {
 
     private fun handleFailure(t: Throwable) {
         Log.d(TAG, "onFailure: ${t.message.toString()}")
-        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+        // TODO: 204 No Content -> vykona delete, ale hodi failure
+//        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+        finish()
     }
 }

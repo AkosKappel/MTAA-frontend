@@ -107,21 +107,13 @@ class UpdateProfileActivity : AppCompatActivity() {
         val updatedUser: UserResponse? = response.body()
         if (updatedUser != null) {
             sessionManager.saveUserEmail(updatedUser.email)
-            Toast.makeText(
-                applicationContext,
-                "Profile updated successfully",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            val intent = Intent(applicationContext, ProfileActivity::class.java)
-            startActivity(intent)
+            val msg = "Profile updated successfully"
+            Log.d(TAG, msg)
+            Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
             finish()
         } else {
-            Toast.makeText(
-                applicationContext,
-                "Profile update failed",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(applicationContext, "Profile update failed", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

@@ -45,8 +45,6 @@ class ProfileActivity : AppCompatActivity() {
         tvUserEmail = findViewById(R.id.tvEmailText)
         tvUserDate = findViewById(R.id.tvRegistrationDateText)
 
-        fetchUser()
-
         btnHome.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
@@ -55,7 +53,6 @@ class ProfileActivity : AppCompatActivity() {
         btnUpdateProfile.setOnClickListener {
             val intent = Intent(applicationContext, UpdateProfileActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         btnCalendar.setOnClickListener {
@@ -64,6 +61,11 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener { finish() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        fetchUser()
     }
 
     private fun fetchUser() {

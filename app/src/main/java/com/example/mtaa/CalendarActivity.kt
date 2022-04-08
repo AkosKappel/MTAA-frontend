@@ -19,7 +19,8 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Calendar
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CalendarActivity : AppCompatActivity() {
 
@@ -48,7 +49,6 @@ class CalendarActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
 
         allMeetings = ArrayList()
-        fetchMeetings()
 
         cvCalendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val selectedMeetings = getMeetingsOnDate(year, month, dayOfMonth)
@@ -66,6 +66,19 @@ class CalendarActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener { finish() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        fetchMeetings()
+
+        val cal = Utils.dateToCalendar(Date(cvCalendar.date))
+        val meetings = getMeetingsOnDate(
+            cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH),
+            cal.get(Calendar.DAY_OF_MONTH)
+        )
+        showMeetings(meetings)
     }
 
     private fun fetchMeetings() {
