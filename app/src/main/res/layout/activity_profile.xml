@@ -37,7 +37,7 @@
         android:gravity="center"
         android:text="Meetuj"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
