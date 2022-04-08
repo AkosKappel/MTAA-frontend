@@ -40,6 +40,9 @@ interface ApiInterface {
     @GET("/users/calls")
     fun getMeetings(): Call<List<MeetingResponse>>
 
+    @GET("/contacts")
+    fun getContacts(): Call<List<ContactList>>
+
 //    @POST("/users/calls")
 //    fun createCall(
 //        @Body call: Call<>
