@@ -43,6 +43,16 @@ interface ApiInterface {
     @GET("/contacts")
     fun getContacts(): Call<List<ContactList>>
 
+    @POST("/contacts/{contact_id}")
+    fun addContact(
+        @Path("contact_id") contact_id: Int
+    ): Call<List<ContactList>>
+
+    @DELETE("/contacts/{contact_id}")
+    fun removeContact(
+        @Path("contact_id") contact_id: Int
+    ): Call<List<ContactList>>
+
 //    @POST("/users/calls")
 //    fun createCall(
 //        @Body call: Call<>

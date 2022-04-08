@@ -37,6 +37,7 @@ class ManageContactsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_contacts)
 
+        etContactId = findViewById(R.id.etContactId)
         btnRemoveContact = findViewById(R.id.btnRemoveContact)
         rvContacts = findViewById(R.id.rvContacts)
         btnAddContact = findViewById(R.id.btnAddContact)
@@ -57,6 +58,54 @@ class ManageContactsActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener { finish() }
+
+        btnAddContact.setOnClickListener {
+            addContact()
+        }
+
+        btnRemoveContact.setOnClickListener {
+            removeContact()
+        }
+    }
+
+    private fun addContact() {
+        ApiClient.getApiService(applicationContext)
+            .addContact(etContactId.text.toString().trim().toInt())
+            .enqueue(object : Callback<List<ContactList>> {
+                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
+
+    private fun removeContact() {
+        ApiClient.getApiService(applicationContext)
+            .removeContact(etContactId.text.toString().trim().toInt())
+            .enqueue(object : Callback<List<ContactList>> {
+                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
     }
 
 
@@ -88,7 +137,7 @@ class ManageContactsActivity : AppCompatActivity() {
     private fun handleSuccessfulResponse(response: Response<List<ContactList>>) {
         allContacts = response.body()!!
         Log.d(TAG, "Received ${allContacts.size} contacts")
-        showMeetings(allContacts)
+        showContacts(allContacts)
     }
 
     private fun handleNotSuccessfulResponse(response: Response<List<ContactList>>) {
@@ -97,7 +146,7 @@ class ManageContactsActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
     }
 
-    private fun showMeetings(contacts: List<ContactList>) {
+    private fun showContacts(contacts: List<ContactList>) {
         rvContacts.layoutManager = LinearLayoutManager(applicationContext)
         rvContacts.adapter = ContactsAdapter(contacts)
     }
