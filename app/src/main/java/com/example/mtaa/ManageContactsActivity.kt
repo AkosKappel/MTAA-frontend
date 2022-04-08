@@ -150,13 +150,13 @@ class ManageContactsActivity : AppCompatActivity() {
         Log.d(TAG, "Received ${allContacts.size} contacts")
         etContactId.setText("")
 
-        if (allContacts.isEmpty()) {
-            rvContacts.visibility = View.GONE
-            tvEmpty.visibility = View.VISIBLE
-        } else {
-            rvContacts.visibility = View.VISIBLE
-            tvEmpty.visibility = View.GONE
-        }
+//        if (allContacts.isEmpty()) {
+//            rvContacts.visibility = View.GONE
+//            tvEmpty.visibility = View.VISIBLE
+//        } else {
+//            rvContacts.visibility = View.VISIBLE
+//            tvEmpty.visibility = View.GONE
+//        }
 
         showContacts(allContacts)
     }
