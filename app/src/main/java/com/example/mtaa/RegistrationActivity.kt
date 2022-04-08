@@ -38,7 +38,7 @@ class RegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
 
-        sessionManager = SessionManager(this)
+        sessionManager = SessionManager(applicationContext)
 
         btnRegister = findViewById(R.id.btnRegister)
         etEmail = findViewById(R.id.etEmail)

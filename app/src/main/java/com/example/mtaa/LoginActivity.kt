@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // init env variables
-        sessionManager = SessionManager(this)
+        sessionManager = SessionManager(applicationContext)
         Settings.initEnv(assets)
 
         btnLogin = findViewById(R.id.btnLogin)

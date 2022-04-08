@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sessionManager = SessionManager(this)
+        sessionManager = SessionManager(applicationContext)
 
         // get buttons from view
         btnStartCall = findViewById(R.id.btnStartCall)
@@ -46,28 +46,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnStartCall.setOnClickListener {
-            val intent = Intent(this, StartCallActivity::class.java)
+            val intent = Intent(applicationContext, StartCallActivity::class.java)
             startActivity(intent)
         }
 
         btnScheduleMeeting.setOnClickListener {
-            val intent = Intent(this, ScheduleMeetActivity::class.java)
+            val intent = Intent(applicationContext, ScheduleMeetActivity::class.java)
             startActivity(intent)
         }
 
         btnCalendar.setOnClickListener {
-            val intent = Intent(this, CalendarActivity::class.java)
+            val intent = Intent(applicationContext, CalendarActivity::class.java)
             startActivity(intent)
         }
 
         btnManageContacts.setOnClickListener {
-            val intent = Intent(this, ManageContactsActivity::class.java)
+            val intent = Intent(applicationContext, ManageContactsActivity::class.java)
             startActivity(intent)
         }
 
         btnLogOut.setOnClickListener {
             deleteLoggedInUserData()
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(applicationContext, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }

@@ -3,6 +3,7 @@ package com.example.mtaa
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,9 +25,10 @@ class ManageContactsActivity : AppCompatActivity() {
 
     // window elements
     private lateinit var etContactId: EditText
-    private lateinit var rvContacts: RecyclerView
     private lateinit var btnRemoveContact: Button
     private lateinit var btnAddContact: Button
+    private lateinit var rvContacts: RecyclerView
+    private lateinit var tvEmpty: TextView
 
     private lateinit var allContacts: List<Contact>
 
@@ -41,10 +43,11 @@ class ManageContactsActivity : AppCompatActivity() {
         btnProfile = findViewById(R.id.btnProfile)
         btnHome = findViewById(R.id.btnHome)
         btnBack = findViewById(R.id.btnBack)
-        rvContacts = findViewById(R.id.rvContacts)
         etContactId = findViewById(R.id.etContactId)
         btnRemoveContact = findViewById(R.id.btnRemoveContact)
         btnAddContact = findViewById(R.id.btnAddContact)
+        rvContacts = findViewById(R.id.rvContacts)
+        tvEmpty = findViewById(R.id.tvEmpty)
 
         fetchContacts()
 
@@ -144,6 +147,15 @@ class ManageContactsActivity : AppCompatActivity() {
         allContacts = response.body()!!
         Log.d(TAG, "Received ${allContacts.size} contacts")
         etContactId.setText("")
+
+        if (allContacts.isEmpty()) {
+            rvContacts.visibility = View.GONE
+            tvEmpty.visibility = View.VISIBLE
+        } else {
+            rvContacts.visibility = View.VISIBLE
+            tvEmpty.visibility = View.GONE
+        }
+
         showContacts(allContacts)
     }
 

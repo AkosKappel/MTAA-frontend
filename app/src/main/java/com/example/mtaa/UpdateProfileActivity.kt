@@ -1,12 +1,12 @@
 package com.example.mtaa
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.models.UserToRegister
@@ -39,7 +39,7 @@ class UpdateProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_profile)
 
-        sessionManager = SessionManager(this)
+        sessionManager = SessionManager(applicationContext)
         btnHome = findViewById(R.id.btnHome)
         btnBack = findViewById(R.id.btnBack)
         btnProfile = findViewById(R.id.btnProfile)

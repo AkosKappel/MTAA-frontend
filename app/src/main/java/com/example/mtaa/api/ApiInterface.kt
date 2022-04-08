@@ -2,7 +2,6 @@ package com.example.mtaa.api
 
 import com.example.mtaa.models.*
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInterface {
@@ -45,10 +44,10 @@ interface ApiInterface {
     @GET("/users/calls")
     fun getMeetings(): Call<List<MeetingResponse>>
 
-//    @POST("/users/calls")
-//    fun createMeeting(
-//        @Body meeting: MeetingRequest
-//    ): Call<MeetingResponse>
+    @POST("/users/calls")
+    fun createMeeting(
+        @Body meeting: MeetingRequest
+    ): Call<MeetingResponse>
 
     @PUT("calls/{call_id}")
     fun updateMeeting(
@@ -100,7 +99,7 @@ interface ApiInterface {
     ): Call<List<Contact>>
 
     // ----------------------
-    // |       FILE        |
+    // |       FILES        |
     // ----------------------
 
 }

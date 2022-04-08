@@ -41,7 +41,7 @@ class CalendarActivity : AppCompatActivity() {
 
         cvCalendar = findViewById(R.id.cvCalendar)
         rvMeetings = findViewById(R.id.rvMeetings)
-        tvEmpty = findViewById(R.id.rvEmpty)
+        tvEmpty = findViewById(R.id.tvEmpty)
         btnHome = findViewById(R.id.btnHome)
         btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
