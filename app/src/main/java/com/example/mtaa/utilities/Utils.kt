@@ -1,9 +1,15 @@
 package com.example.mtaa.utilities
 
+import android.util.Log
+import android.widget.Toast
+import org.json.JSONObject
+import retrofit2.Response
 import java.util.Calendar
 import java.util.Date
 
 object Utils {
+
+    private val TAG = "Utils"
 
     fun dateToCalendar(date: Date): Calendar {
         val cal = Calendar.getInstance()
@@ -56,6 +62,15 @@ object Utils {
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
         return Date(cal.timeInMillis)
+    }
+
+    fun getErrorBodyDetail(json: JSONObject?): String {
+        try {
+            return json?.getString("detail").toString()
+        } catch (e: Exception) {
+            Log.d(TAG, "getErrorBodyDetail: $e")
+        }
+        return ""
     }
 
 }

@@ -11,7 +11,9 @@ import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.storage.SessionManager
+import com.example.mtaa.utilities.Utils
 import com.example.mtaa.utilities.Validator
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -124,9 +126,11 @@ class UpdateProfileActivity : AppCompatActivity() {
     }
 
     private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
-        val msg = "${response.code()} ${response.errorBody()!!.string()}"
-        Log.d(TAG, "onResponse: $msg")
-        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+        val errorBody = response.errorBody()?.string()
+        val jsonObject = errorBody?.let { JSONObject(it) }
+        val detail = Utils.getErrorBodyDetail(jsonObject)
+        Log.d(TAG, "onResponse: ${response.code()} $detail")
+        Toast.makeText(applicationContext, "Error: $detail", Toast.LENGTH_LONG).show()
     }
 
     private fun handleFailure(t: Throwable) {

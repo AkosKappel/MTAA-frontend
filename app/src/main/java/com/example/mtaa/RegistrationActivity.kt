@@ -10,6 +10,7 @@ import com.example.mtaa.models.TokenData
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.models.UserResponse
+import com.example.mtaa.utilities.Utils
 import com.example.mtaa.utilities.Validator
 import org.json.JSONObject
 import retrofit2.Call
@@ -75,29 +76,6 @@ class RegistrationActivity : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         handleSuccessfulResponseRegister(response, newUser)
-                    } else if (response.code() == 400) {
-                        try {
-                            val jObjError = JSONObject(response.errorBody()!!.string())
-                            val detail = jObjError.getString("detail").toString()
-                            when {
-                                detail.contains("email", true) -> {
-                                    etEmail.error = detail
-                                    etEmail.requestFocus()
-                                }
-                                detail.contains("password", true) -> {
-                                    etPassword.error = detail
-                                    etPassword.requestFocus()
-                                }
-                                else -> {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Error: $detail", Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG).show()
-                        }
                     } else {
                         handleNotSuccessfulResponseRegister(response)
                     }
@@ -122,9 +100,25 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun handleNotSuccessfulResponseRegister(response: Response<UserResponse>) {
-        val msg = "${response.code()} ${response.errorBody()!!.string()}"
-        Log.d(TAG, "onResponse: $msg")
-        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+        val errorBody = response.errorBody()?.string()
+        val jsonObject = errorBody?.let { JSONObject(it) }
+        val detail = Utils.getErrorBodyDetail(jsonObject)
+        if (response.code() == 400) {
+            when {
+                detail.contains("email", true) -> {
+                    etEmail.error = detail
+                    etEmail.requestFocus()
+                }
+                detail.contains("password", true) -> {
+                    etPassword.error = detail
+                    etPassword.requestFocus()
+                }
+                else -> Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Log.d(TAG, "onResponse: ${response.code()} $detail")
+            Toast.makeText(applicationContext, "Error: $detail", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun handleFailure(t: Throwable) {

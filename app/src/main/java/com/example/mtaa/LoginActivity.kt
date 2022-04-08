@@ -11,6 +11,7 @@ import com.example.mtaa.api.ApiClient
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.models.TokenData
 import com.example.mtaa.utilities.Settings
+import com.example.mtaa.utilities.Utils
 import com.example.mtaa.utilities.Validator
 import org.json.JSONObject
 import retrofit2.Call
@@ -120,13 +121,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleNotSuccessfulResponse(response: Response<TokenData>) {
-        val detail = "Invalid credentials"
-        etEmail.error = detail
-        etPassword.error = detail
-        val msg = "${response.code()} ${response.errorBody()!!.string()}"
-        Log.d(TAG, "onResponse: $msg")
-        Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
-//        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+        val errorBody = response.errorBody()?.string()
+        val jsonObject = errorBody?.let { JSONObject(it) }
+        val detail = Utils.getErrorBodyDetail(jsonObject)
+        Log.d(TAG, "onResponse: ${response.code()} $detail")
+        val msg = "Invalid credentials"
+        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
     }
 
     private fun handleFailure(t: Throwable) {
