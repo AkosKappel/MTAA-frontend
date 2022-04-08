@@ -52,7 +52,7 @@ class ManageUsersActivity : AppCompatActivity() {
         selectedMeeting = intent.getSerializableExtra("meeting") as MeetingResponse
 
         fetchContacts()
-        fetchUsers()
+        showUsers(selectedMeeting.users)
 
         btnHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -93,23 +93,30 @@ class ManageUsersActivity : AppCompatActivity() {
     }
 
     private fun removeUser() {
-        ApiClient.getApiService(applicationContext)
-            .removeUserFromCall(selectedMeeting.id, etUserId.text.toString().trim().toInt())
-            .enqueue(object : Callback<List<ContactList>> {
-                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-                    handleFailure(t)
-                }
-
-                override fun onResponse(
-                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
-                ) {
-                    if (response.isSuccessful) {
-                        handleSuccessfulResponse(response)
-                    } else {
-                        handleNotSuccessfulResponse(response)
+        val removeID = etUserId.text.toString().trim().toInt()
+        if (removeID != selectedMeeting.ownerId){
+            ApiClient.getApiService(applicationContext)
+                .removeUserFromCall(selectedMeeting.id, removeID)
+                .enqueue(object : Callback<List<ContactList>> {
+                    override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+                        handleFailure(t)
                     }
-                }
-            })
+
+                    override fun onResponse(
+                        call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                    ) {
+                        if (response.isSuccessful) {
+                            handleSuccessfulResponse(response)
+                        } else {
+                            handleNotSuccessfulResponse(response)
+                        }
+                    }
+                })
+        }else
+        {
+            etUserId.error = "Owner ID"
+            etUserId.requestFocus()
+        }
     }
 
 
@@ -149,25 +156,25 @@ class ManageUsersActivity : AppCompatActivity() {
         rvContacts.adapter = ContactsAdapter(contacts)
     }
 
-    private fun fetchUsers() {
-        ApiClient.getApiService(applicationContext)
-            .getUsersOfCall(selectedMeeting.id)
-            .enqueue(object : Callback<List<ContactList>> {
-                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-                    handleFailure(t)
-                }
-
-                override fun onResponse(
-                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
-                ) {
-                    if (response.isSuccessful) {
-                        handleSuccessfulResponse(response)
-                    } else {
-                        handleNotSuccessfulResponse(response)
-                    }
-                }
-            })
-    }
+//    private fun fetchUsers() {
+//        ApiClient.getApiService(applicationContext)
+//            .getUsersOfCall(selectedMeeting.id)
+//            .enqueue(object : Callback<List<ContactList>> {
+//                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+//                    handleFailure(t)
+//                }
+//
+//                override fun onResponse(
+//                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+//                ) {
+//                    if (response.isSuccessful) {
+//                        handleSuccessfulResponse(response)
+//                    } else {
+//                        handleNotSuccessfulResponse(response)
+//                    }
+//                }
+//            })
+//    }
 
 
     private fun handleSuccessfulResponse(response: Response<List<ContactList>>) {
