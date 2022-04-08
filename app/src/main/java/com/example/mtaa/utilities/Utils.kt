@@ -51,17 +51,16 @@ object Utils {
         )
     }
 
-    fun dateFromDateAndTimeString(date: Date, time: String): Date {
+    fun getDateFromTimeString(calendar: Calendar, time: String): Date {
         val timeArray = time.split(":")
         val hour = timeArray[0].toInt()
         val minute = timeArray[1].toInt()
-        val cal = Calendar.getInstance()
-        cal.time = date
-        cal.set(Calendar.HOUR_OF_DAY, hour)
-        cal.set(Calendar.MINUTE, minute)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return Date(cal.timeInMillis)
+        val timeZoneOffset = calendar.timeZone.rawOffset / 3600000 + 1
+        calendar.set(Calendar.HOUR_OF_DAY, hour - timeZoneOffset)
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.time
     }
 
     fun getErrorBodyDetail(json: JSONObject?): String {

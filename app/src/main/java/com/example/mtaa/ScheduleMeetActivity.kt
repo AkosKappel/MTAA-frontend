@@ -14,7 +14,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Date
+import java.util.*
 
 class ScheduleMeetActivity : AppCompatActivity() {
 
@@ -47,6 +47,11 @@ class ScheduleMeetActivity : AppCompatActivity() {
         etDuration = findViewById(R.id.etDuration)
         btnCreateMeeting = findViewById(R.id.btnCreateMeeting)
 
+        val dateCalendar = Calendar.getInstance()
+        cvCalendar.setOnDateChangeListener { _, year, month, day ->
+            dateCalendar.set(year, month, day)
+        }
+
         btnCreateMeeting.setOnClickListener {
             if (!Validator.validateTitle(etTitle) ||
                 !Validator.validateTime(etTime) ||
@@ -55,11 +60,8 @@ class ScheduleMeetActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val title = etTitle.text.toString().trim()
-            val date =
-                Utils.dateFromDateAndTimeString(
-                    Date(cvCalendar.date),
-                    etTime.text.toString().trim()
-                )
+            val time = etTime.text.toString().trim()
+            val date = Utils.getDateFromTimeString(dateCalendar, time)
             val duration = etDuration.text.toString().trim().toInt()
 
             val newMeeting = MeetingRequest(title, date, duration)

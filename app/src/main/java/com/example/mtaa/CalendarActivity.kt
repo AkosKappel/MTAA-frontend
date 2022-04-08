@@ -47,6 +47,7 @@ class CalendarActivity : AppCompatActivity() {
         btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
 
+        allMeetings = ArrayList()
         fetchMeetings()
 
         cvCalendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
