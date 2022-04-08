@@ -7,7 +7,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mtaa.utilities.Utils
+import com.example.mtaa.utilities.Validator
 
 class ScheduleMeetActivity : AppCompatActivity() {
 
@@ -43,9 +43,9 @@ class ScheduleMeetActivity : AppCompatActivity() {
         }
 
         btnCreateMeeting.setOnClickListener {
-            if (!Utils.validateTitle(etTitle) ||
-                !Utils.validateTime(etTime) ||
-                !Utils.validateDuration(etDuration)
+            if (!Validator.validateTitle(etTitle) ||
+                !Validator.validateTime(etTime) ||
+                !Validator.validateDuration(etDuration)
             ) {
                 return@setOnClickListener
             }

@@ -11,7 +11,7 @@ import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.storage.SessionManager
-import com.example.mtaa.utilities.Utils
+import com.example.mtaa.utilities.Validator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,11 +56,14 @@ class UpdateProfileActivity : AppCompatActivity() {
         etEmail.setText(sessionManager.fetchUserEmail())
 
         btnUpdateProfile.setOnClickListener {
-            if (!Utils.validateEmail(etEmail) || !Utils.validatePassword(etPassword)) {
+            if (!Validator.validateEmail(etEmail)) {
+                return@setOnClickListener
+            }
+            val password = etPassword.text.toString().trim()
+            if (password.isNotEmpty() && !Validator.validatePassword(etPassword)) {
                 return@setOnClickListener
             }
             val email = etEmail.text.toString().trim()
-            val password = etPassword.text.toString().trim()
             val updatedUser = UserToRegister(email, password)
             updateUser(updatedUser)
         }

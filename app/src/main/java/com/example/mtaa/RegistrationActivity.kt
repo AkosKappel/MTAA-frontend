@@ -9,7 +9,7 @@ import com.example.mtaa.api.ApiClient
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.models.UserResponse
-import com.example.mtaa.utilities.Utils
+import com.example.mtaa.utilities.Validator
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,8 +47,8 @@ class RegistrationActivity : AppCompatActivity() {
 
         btnRegister.setOnClickListener {
             // validate user input
-            if (!Utils.validateEmail(etEmail) ||
-                !Utils.validatePassword(etPassword, etConfirmPassword)
+            if (!Validator.validateEmail(etEmail) ||
+                !Validator.validatePassword(etPassword, etConfirmPassword)
             ) {
                 return@setOnClickListener
             }

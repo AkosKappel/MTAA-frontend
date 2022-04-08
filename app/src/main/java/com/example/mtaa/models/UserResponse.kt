@@ -1,5 +1,6 @@
 package com.example.mtaa.models
 
+import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 /**
@@ -8,5 +9,5 @@ import java.util.Date
 data class UserResponse(
     val id: String,
     val email: String,
-    val created_at: Date
+    @SerializedName("created_at") val createdAt: Date
 )

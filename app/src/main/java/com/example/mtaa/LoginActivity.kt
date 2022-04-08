@@ -10,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.models.TokenData
-import com.example.mtaa.utilities.Utils
+import com.example.mtaa.utilities.Settings
+import com.example.mtaa.utilities.Validator
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
         // init env variables
         sessionManager = SessionManager(this)
-        Utils.initEnv(assets)
+        Settings.initEnv(assets)
 
         btnLogin = findViewById(R.id.btnLogin)
         btnRegister = findViewById(R.id.btnRegister)
@@ -44,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
 
         btnLogin.setOnClickListener {
-            if (!Utils.validateEmail(etEmail) || !Utils.validatePassword(etPassword)) {
+            if (!Validator.validateEmail(etEmail) || !Validator.validatePassword(etPassword)) {
                 return@setOnClickListener
             }
             val email: String = etEmail.text.toString().trim()

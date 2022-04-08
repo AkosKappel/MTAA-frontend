@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
-import com.example.mtaa.models.MeetingResponse
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.utilities.Utils
 import retrofit2.Call
@@ -56,6 +55,7 @@ class ProfileActivity : AppCompatActivity() {
         btnUpdateProfile.setOnClickListener {
             val intent = Intent(applicationContext, UpdateProfileActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         btnCalendar.setOnClickListener {
@@ -90,11 +90,8 @@ class ProfileActivity : AppCompatActivity() {
         val user = response.body()
         val userId = user?.id ?: "ID not found"
         val userEmail = user?.email ?: "Email not found"
-        val userRegistrationDate = user?.created_at?.let {
-            Utils.dateToCalendar(it).get(Calendar.DAY_OF_MONTH).toString() + '.' +
-                    (Utils.dateToCalendar(it).get(Calendar.MONTH) + 1).toString() + '.' +
-                    Utils.dateToCalendar(it).get(Calendar.YEAR).toString() }
-            ?: "Registration date not found"
+        val userRegistrationDate =
+            user?.createdAt?.let { Utils.formatDate(it) } ?: "Registration date not found"
 
         // set fields
         tvUserId.text = userId

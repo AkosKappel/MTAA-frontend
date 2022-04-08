@@ -1,7 +1,7 @@
 package com.example.mtaa.api
 
 import android.content.Context
-import com.example.mtaa.utilities.Utils
+import com.example.mtaa.utilities.Settings
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
 
-    private val BASE_URL = Utils.env?.get("BASE_URL")!!
+    private val BASE_URL = Settings.env?.get("BASE_URL")!!
     private var retrofit: Retrofit? = null
 
     private fun getClient(context: Context): Retrofit {
