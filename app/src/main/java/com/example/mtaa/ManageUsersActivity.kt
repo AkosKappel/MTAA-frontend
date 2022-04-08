@@ -1,16 +1,15 @@
 package com.example.mtaa
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mtaa.adapters.ContactsAdapter
 import com.example.mtaa.api.ApiClient
-import com.example.mtaa.models.ContactList
+import com.example.mtaa.models.Contact
 import com.example.mtaa.models.MeetingResponse
 import com.example.mtaa.utilities.Validator
 import retrofit2.Call
@@ -19,19 +18,21 @@ import retrofit2.Response
 
 class ManageUsersActivity : AppCompatActivity() {
 
-    private lateinit var btnRemoveUser: Button
-    private lateinit var btnAddUser: Button
+    // toolbar elements
+    private lateinit var btnProfile: ImageView
     private lateinit var btnHome: TextView
     private lateinit var btnBack: ImageView
-    private lateinit var btnProfile: ImageView
+
+    // window elements
+    private lateinit var btnRemoveUser: Button
+    private lateinit var btnAddUser: Button
     private lateinit var rvContacts: RecyclerView
     private lateinit var rvUsers: RecyclerView
     private lateinit var etUserId: EditText
     private lateinit var selectedMeeting: MeetingResponse
 
-
-    private lateinit var allContacts: List<ContactList>
-    private lateinit var allUsers: List<ContactList>
+    private lateinit var allContacts: List<Contact>
+    private lateinit var allUsers: List<Contact>
 
     companion object {
         private const val TAG: String = "ManageUsersActivity"
@@ -41,22 +42,23 @@ class ManageUsersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_users)
 
+        btnProfile = findViewById(R.id.btnProfile)
+        btnHome = findViewById(R.id.btnHome)
+        btnBack = findViewById(R.id.btnBack)
         rvContacts = findViewById(R.id.rvContacts)
         rvUsers = findViewById(R.id.rvUsers)
         etUserId = findViewById(R.id.etUserId)
         btnRemoveUser = findViewById(R.id.btnRemoveUser)
         btnAddUser = findViewById(R.id.btnAddUser)
-        btnHome = findViewById(R.id.btnHome)
-        btnProfile = findViewById(R.id.btnProfile)
-        btnBack = findViewById(R.id.btnBack)
 
         selectedMeeting = intent.getSerializableExtra("meeting") as MeetingResponse
 
         fetchContacts()
-        showUsers(selectedMeeting.users)
+        allUsers = selectedMeeting.users
+        showUsers()
 
         btnHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -65,35 +67,41 @@ class ManageUsersActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnBack.setOnClickListener { finish() }
-
         btnAddUser.setOnClickListener {
-            if (Validator.validateID(etUserId)) {
-                addUser()
+            if (!Validator.validateID(etUserId) ||
+                !Validator.validateNotOwner(etUserId, selectedMeeting.ownerId)
+            ) {
+                return@setOnClickListener
             }
+            addUser()
         }
 
         btnRemoveUser.setOnClickListener {
-            if (Validator.validateID(etUserId)) {
-                removeUser()
+            if (!Validator.validateID(etUserId) ||
+                !Validator.validateNotOwner(etUserId, selectedMeeting.ownerId)
+            ) {
+                return@setOnClickListener
             }
+            val removeId = etUserId.text.toString().trim().toInt()
+            removeUser(removeId)
         }
 
+        btnBack.setOnClickListener { finish() }
     }
 
     private fun addUser() {
         ApiClient.getApiService(applicationContext)
-            .addUserToCall(selectedMeeting.id, etUserId.text.toString().trim().toInt())
-            .enqueue(object : Callback<List<ContactList>> {
-                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+            .addUserToMeeting(selectedMeeting.id, etUserId.text.toString().trim().toInt())
+            .enqueue(object : Callback<List<Contact>> {
+                override fun onFailure(call: Call<List<Contact>>, t: Throwable) {
                     handleFailure(t)
                 }
 
                 override fun onResponse(
-                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                    call: Call<List<Contact>>, response: Response<List<Contact>>
                 ) {
                     if (response.isSuccessful) {
-                        handleSuccessfulResponse(response)
+                        handleSuccessfulResponseUsers(response)
                     } else {
                         handleNotSuccessfulResponse(response)
                     }
@@ -101,43 +109,36 @@ class ManageUsersActivity : AppCompatActivity() {
             })
     }
 
-    private fun removeUser() {
-        val removeID = etUserId.text.toString().trim().toInt()
-        if (removeID != selectedMeeting.ownerId) {
-            ApiClient.getApiService(applicationContext)
-                .removeUserFromCall(selectedMeeting.id, removeID)
-                .enqueue(object : Callback<List<ContactList>> {
-                    override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-                        handleFailure(t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<List<ContactList>>, response: Response<List<ContactList>>
-                    ) {
-                        if (response.isSuccessful) {
-                            handleSuccessfulResponse(response)
-                        } else {
-                            handleNotSuccessfulResponse(response)
-                        }
-                    }
-                })
-        } else {
-            etUserId.error = "Owner ID"
-            etUserId.requestFocus()
-        }
-    }
-
-
-    private fun fetchContacts() {
+    private fun removeUser(removeId: Int) {
         ApiClient.getApiService(applicationContext)
-            .getContacts()
-            .enqueue(object : Callback<List<ContactList>> {
-                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+            .removeUserFromMeeting(selectedMeeting.id, removeId)
+            .enqueue(object : Callback<List<Contact>> {
+                override fun onFailure(call: Call<List<Contact>>, t: Throwable) {
                     handleFailure(t)
                 }
 
                 override fun onResponse(
-                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                    call: Call<List<Contact>>, response: Response<List<Contact>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponseUsers(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
+
+    private fun fetchContacts() {
+        ApiClient.getApiService(applicationContext)
+            .getContacts()
+            .enqueue(object : Callback<List<Contact>> {
+                override fun onFailure(call: Call<List<Contact>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<Contact>>, response: Response<List<Contact>>
                 ) {
                     if (response.isSuccessful) {
                         handleSuccessfulResponseContacts(response)
@@ -146,22 +147,6 @@ class ManageUsersActivity : AppCompatActivity() {
                     }
                 }
             })
-    }
-
-    private fun handleFailure(t: Throwable) {
-        Log.d(TAG, "onFailure: ${t.message.toString()}")
-        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-    }
-
-    private fun handleSuccessfulResponseContacts(response: Response<List<ContactList>>) {
-        allContacts = response.body()!!
-        Log.d(TAG, "Received ${allContacts.size} contacts")
-        showContacts(allContacts)
-    }
-
-    private fun showContacts(contacts: List<ContactList>) {
-        rvContacts.layoutManager = LinearLayoutManager(applicationContext)
-        rvContacts.adapter = ContactsAdapter(contacts)
     }
 
 //    private fun fetchUsers() {
@@ -184,22 +169,50 @@ class ManageUsersActivity : AppCompatActivity() {
 //            })
 //    }
 
-
-    private fun handleSuccessfulResponse(response: Response<List<ContactList>>) {
-        allUsers = response.body()!!
-        Log.d(TAG, "Received ${allUsers.size} users")
-        showUsers(allUsers)
+    private fun handleSuccessfulResponseContacts(response: Response<List<Contact>>) {
+        allContacts = response.body()!!
+        Log.d(TAG, "Received ${allContacts.size} contacts")
+        showContacts()
     }
 
-    private fun handleNotSuccessfulResponse(response: Response<List<ContactList>>) {
+    private fun handleSuccessfulResponseUsers(response: Response<List<Contact>>) {
+        allUsers = response.body()!!
+        Log.d(TAG, "Received ${allUsers.size} users")
+        etUserId.setText("")
+        showUsers()
+    }
+
+    private fun handleNotSuccessfulResponse(response: Response<List<Contact>>) {
         val msg = "${response.code()} ${response.errorBody()!!.string()}"
         Log.d(TAG, "onResponse: $msg")
         Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
     }
 
-    private fun showUsers(users: List<ContactList>) {
+    private fun handleFailure(t: Throwable) {
+        Log.d(TAG, "onFailure: ${t.message.toString()}")
+        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showContacts() {
+        rvContacts.layoutManager = LinearLayoutManager(applicationContext)
+        val adapter = ContactsAdapter(allContacts)
+        rvContacts.adapter = adapter
+        adapter.setOnItemClickListener(object : ContactsAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                etUserId.setText(allContacts[position].id.toString())
+            }
+        })
+    }
+
+    private fun showUsers() {
         rvUsers.layoutManager = LinearLayoutManager(applicationContext)
-        rvUsers.adapter = ContactsAdapter(users)
+        val adapter = ContactsAdapter(allUsers)
+        rvUsers.adapter = adapter
+        adapter.setOnItemClickListener(object : ContactsAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                etUserId.setText(allUsers[position].id.toString())
+            }
+        })
     }
 
 }

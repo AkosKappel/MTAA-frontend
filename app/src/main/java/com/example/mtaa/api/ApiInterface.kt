@@ -7,6 +7,10 @@ import retrofit2.http.*
 
 interface ApiInterface {
 
+    // ----------------------
+    // |   AUTHORIZATION    |
+    // ----------------------
+
     @POST("/register")
     fun registerUser(
         @Body user: UserToRegister
@@ -19,6 +23,10 @@ interface ApiInterface {
         @Field("password") password: String
     ): Call<TokenData>
 
+    // ----------------------
+    // |       USERS        |
+    // ----------------------
+
     @GET("/users")
     fun getUser(): Call<UserResponse>
 
@@ -28,51 +36,71 @@ interface ApiInterface {
     ): Call<UserResponse>
 
     @DELETE("/users")
-    fun deleteUser(): Call<Response<Void>>
+    fun deleteUser(): Call<Void>
+
+    // ----------------------
+    // |      MEETINGS      |
+    // ----------------------
 
     @GET("/users/calls")
     fun getMeetings(): Call<List<MeetingResponse>>
 
-    @PUT("calls/{id}")
+//    @POST("/users/calls")
+//    fun createMeeting(
+//        @Body meeting: MeetingRequest
+//    ): Call<MeetingResponse>
+
+    @PUT("calls/{call_id}")
     fun updateMeeting(
-        @Path("id") id: Int,
+        @Path("call_id") id: Int,
         @Body meeting: MeetingRequest
     ): Call<MeetingResponse>
 
+    @DELETE("calls/{call_id}")
+    fun deleteMeeting(
+        @Path("call_id") id: Int
+    ): Call<Void>
+
+    // ----------------------
+    // |  USERS & MEETINGS  |
+    // ----------------------
+
+    @GET("/calls/{call_id}/users")
+    fun getMeetingUsers(
+        @Path("call_id") call_id: Int
+    ): Call<List<Contact>>
+
+    @POST("/calls/{call_id}/users/{user_id}")
+    fun addUserToMeeting(
+        @Path("call_id") call_id: Int,
+        @Path("user_id") user_id: Int
+    ): Call<List<Contact>>
+
+    @DELETE("/calls/{call_id}/users/{user_id}")
+    fun removeUserFromMeeting(
+        @Path("call_id") call_id: Int,
+        @Path("user_id") user_id: Int
+    ): Call<List<Contact>>
+
+    // ----------------------
+    // |      CONTACTS      |
+    // ----------------------
+
     @GET("/contacts")
-    fun getContacts(): Call<List<ContactList>>
+    fun getContacts(): Call<List<Contact>>
 
     @POST("/contacts/{contact_id}")
     fun addContact(
         @Path("contact_id") contact_id: Int
-    ): Call<List<ContactList>>
+    ): Call<List<Contact>>
 
     @DELETE("/contacts/{contact_id}")
     fun removeContact(
         @Path("contact_id") contact_id: Int
-    ): Call<List<ContactList>>
+    ): Call<List<Contact>>
 
-    @GET("/calls/{call_id}/users")
-    fun getUsersOfCall(
-        @Path("call_id") call_id: Int
-    ): Call<List<ContactList>>
-
-    @POST("/calls/{call_id}/users/{user_id}")
-    fun addUserToCall(
-        @Path("call_id") call_id: Int,
-        @Path("user_id") user_id: Int
-    ): Call<List<ContactList>>
-
-    @DELETE("/calls/{call_id}/users/{user_id}")
-    fun removeUserFromCall(
-        @Path("call_id") call_id: Int,
-        @Path("user_id") user_id: Int
-    ): Call<List<ContactList>>
-
-
-//    @POST("/users/calls")
-//    fun createCall(
-//        @Body call: Call<>
-//    ): Call<CallResponse>
+    // ----------------------
+    // |       FILE        |
+    // ----------------------
 
 }

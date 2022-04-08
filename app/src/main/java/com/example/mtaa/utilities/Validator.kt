@@ -85,14 +85,39 @@ object Validator {
             etDuration.requestFocus()
             return false
         }
+        if (duration.toInt() <= 0) {
+            etDuration.error = "Duration must be a positive number"
+            etDuration.requestFocus()
+            return false
+        }
         return true
     }
 
-    fun validateID(etUserid: EditText): Boolean {
-        val id = etUserid.text.toString().trim()
+    fun validateID(etId: EditText): Boolean {
+        val id = etId.text.toString().trim()
         if (id.isEmpty()) {
-            etUserid.error = "ID is required"
-            etUserid.requestFocus()
+            etId.error = "ID is required"
+            etId.requestFocus()
+            return false
+        }
+        if (id.toIntOrNull() == null) {
+            etId.error = "ID must be a number"
+            etId.requestFocus()
+            return false
+        }
+        if (id.toInt() <= 0) {
+            etId.error = "ID must be a positive number"
+            etId.requestFocus()
+            return false
+        }
+        return true
+    }
+
+    fun validateNotOwner(etId: EditText, ownerId: Int): Boolean {
+        val id = etId.text.toString().trim().toInt()
+        if (id == ownerId) {
+            etId.error = "Cannot add / remove owner"
+            etId.requestFocus()
             return false
         }
         return true

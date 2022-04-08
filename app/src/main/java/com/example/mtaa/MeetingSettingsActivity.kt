@@ -68,9 +68,7 @@ class MeetingSettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnDeleteMeeting.setOnClickListener {
-            // TODO: delete meeting
-        }
+        btnDeleteMeeting.setOnClickListener { deleteMeeting() }
 
         btnSaveChanges.setOnClickListener {
             if (!Validator.validateTitle(etTitle) ||
@@ -117,39 +115,66 @@ class MeetingSettingsActivity : AppCompatActivity() {
                     response: Response<MeetingResponse>
                 ) {
                     if (response.isSuccessful) {
-                        handleSuccessfulResponse(response)
+                        handleSuccessfulResponseUpdate(response)
                     } else {
-                        handleNotSuccessfulResponse(response)
+                        handleNotSuccessfulResponseUpdate(response)
                     }
                 }
             })
     }
 
-    private fun deleteMeeting() {}
+    private fun deleteMeeting() {
+        ApiClient.getApiService(applicationContext)
+            .deleteMeeting(selectedMeeting.id)
+            .enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    handleFailure(t)
+                }
 
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponseDelete(response)
+                    } else {
+                        handleNotSuccessfulResponseDelete(response)
+                    }
+                }
+            })
+    }
 
-    private fun handleSuccessfulResponse(response: Response<MeetingResponse>) {
+    private fun handleSuccessfulResponseUpdate(response: Response<MeetingResponse>) {
         val updatedMeeting: MeetingResponse? = response.body()
         if (updatedMeeting != null) {
-            Toast.makeText(
-                applicationContext,
-                "Meeting updated successfully",
-                Toast.LENGTH_SHORT
-            ).show()
+            val msg = "Meeting updated successfully"
+            Log.d(TAG, msg)
+            Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
 
             val intent = Intent(applicationContext, CalendarActivity::class.java)
             startActivity(intent)
             finish()
         } else {
-            Toast.makeText(
-                applicationContext,
-                "Meeting update failed",
-                Toast.LENGTH_SHORT
-            ).show()
+            val msg = "Meeting update failed"
+            Log.d(TAG, msg)
+            Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun handleNotSuccessfulResponse(response: Response<MeetingResponse>) {
+    private fun handleNotSuccessfulResponseUpdate(response: Response<MeetingResponse>) {
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun handleSuccessfulResponseDelete(response: Response<Void>) {
+        val msg = "Meeting deleted successfully"
+        Log.d(TAG, msg)
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+
+        val intent = Intent(applicationContext, CalendarActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun handleNotSuccessfulResponseDelete(response: Response<Void>) {
         val msg = "${response.code()} ${response.errorBody()!!.string()}"
         Log.d(TAG, "onResponse: $msg")
         Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()

@@ -10,5 +10,5 @@ data class MeetingResponse(
     @SerializedName("owner_id") val ownerId: Int,
     val date: Date,
     val duration: Int,
-    val users: List<ContactList>
+    val users: List<Contact>
 ) : Serializable
