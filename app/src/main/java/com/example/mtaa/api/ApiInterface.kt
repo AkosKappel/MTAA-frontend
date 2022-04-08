@@ -19,13 +19,6 @@ interface ApiInterface {
         @Field("password") password: String
     ): Call<TokenData>
 
-//    // TODO: ukazka ako funguje id v url
-//    @POST("/users/{id}")
-//    fun getUser(
-//        @Body user: User,
-//        @Path("id") id: Int
-//    ): Call<UserResponse>
-
     @GET("/users")
     fun getUser(): Call<UserResponse>
 
@@ -39,6 +32,12 @@ interface ApiInterface {
 
     @GET("/users/calls")
     fun getMeetings(): Call<List<MeetingResponse>>
+
+    @PUT("calls/{id}")
+    fun updateMeeting(
+        @Path("id") id: Int,
+        @Body meeting: MeetingRequest
+    ): Call<MeetingResponse>
 
     @GET("/contacts")
     fun getContacts(): Call<List<ContactList>>

@@ -71,13 +71,22 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+            <CalendarView
+                android:id="@+id/cvCalendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <EditText
-                android:id="@+id/etName"
+                android:id="@+id/etTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="Title"
                 android:inputType="text"
                 android:minHeight="48dp"
                 android:paddingHorizontal="16dp" />
@@ -99,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:ems="10"
-                android:hint="Duration"
+                android:hint="Duration in minutes"
                 android:inputType="number"
                 android:minHeight="48dp"
                 android:paddingHorizontal="16dp" />
@@ -143,7 +152,10 @@
                 android:textSize="20sp"
                 android:theme="@style/primaryButton" />
 
-
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="24dp"/>
 
         </LinearLayout>
     </ScrollView>

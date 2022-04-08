@@ -65,6 +65,11 @@ object Validator {
             etTime.requestFocus()
             return false
         }
+        if (!time.matches(Settings.timePattern)) {
+            etTime.error = "Time is not valid"
+            etTime.requestFocus()
+            return false
+        }
         return true
     }
 
@@ -72,6 +77,11 @@ object Validator {
         val duration = etDuration.text.toString().trim()
         if (duration.isEmpty()) {
             etDuration.error = "Duration is required"
+            etDuration.requestFocus()
+            return false
+        }
+        if (duration.toIntOrNull() == null) {
+            etDuration.error = "Duration must be a number"
             etDuration.requestFocus()
             return false
         }
