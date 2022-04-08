@@ -17,7 +17,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:padding="4dp">
 
                 <TextView
                     android:id="@+id/tvUserID"
@@ -37,11 +37,11 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="7dp"
-                android:background="#414141" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:layout_marginBottom="7dp"-->
+<!--                android:background="#414141" />-->
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

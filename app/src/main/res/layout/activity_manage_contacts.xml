@@ -36,7 +36,7 @@
         android:gravity="center"
         android:text="Meetuj"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
@@ -65,12 +65,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" >
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textSize="16dp"
+            android:text="Contacts list" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvContacts"
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:layout_marginHorizontal="24dp"
-            android:layout_marginVertical="8dp">
+            android:layout_marginVertical="8dp"
+            android:text="You have no contacts">
 
         </androidx.recyclerview.widget.RecyclerView>
 
