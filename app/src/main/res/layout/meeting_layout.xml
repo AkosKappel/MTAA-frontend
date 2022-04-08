@@ -25,14 +25,16 @@
                     android:layout_height="wrap_content"
                     android:text="Meeting with Tony Stark"
                     android:textColor="#1A1A1A"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvTitle"
-                    android:text="04:20" />
+                    android:text="04:20"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDuration"
@@ -40,15 +42,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvTime"
                     android:text="69 minutes" />
-
-                <Button
-                    android:id="@+id/btnDetail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="Detail"
-                    android:textAllCaps="false" />
 
             </RelativeLayout>
 

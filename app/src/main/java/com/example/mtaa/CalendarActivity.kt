@@ -18,7 +18,7 @@ import com.example.mtaa.utilities.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.util.Calendar
 
 class CalendarActivity : AppCompatActivity() {
 
