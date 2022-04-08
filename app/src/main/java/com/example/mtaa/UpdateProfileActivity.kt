@@ -110,6 +110,10 @@ class UpdateProfileActivity : AppCompatActivity() {
                 "Profile updated successfully",
                 Toast.LENGTH_SHORT
             ).show()
+
+            val intent = Intent(applicationContext, ProfileActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
             Toast.makeText(
                 applicationContext,
@@ -117,7 +121,6 @@ class UpdateProfileActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        finish()
     }
 
     private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
