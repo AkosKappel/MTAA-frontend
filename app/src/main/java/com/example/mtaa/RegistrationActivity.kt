@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
+import com.example.mtaa.models.TokenData
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.models.UserResponse
@@ -73,7 +74,7 @@ class RegistrationActivity : AppCompatActivity() {
                     call: Call<UserResponse>, response: Response<UserResponse>
                 ) {
                     if (response.isSuccessful) {
-                        handleSuccessfulResponse(response)
+                        handleSuccessfulResponse(response, newUser)
                     } else if (response.code() == 400) {
                         try {
                             val jObjError = JSONObject(response.errorBody()!!.string())
@@ -104,7 +105,7 @@ class RegistrationActivity : AppCompatActivity() {
             })
     }
 
-    private fun handleSuccessfulResponse(response: Response<UserResponse>) {
+    private fun handleSuccessfulResponse(response: Response<UserResponse>, newUser: UserToRegister) {
         val registeredUser: UserResponse? = response.body()
         if (registeredUser != null) {
             Toast.makeText(
@@ -116,12 +117,12 @@ class RegistrationActivity : AppCompatActivity() {
             sessionManager.saveUserId(registeredUser.id)
             sessionManager.saveUserEmail(registeredUser.email)
 
-            // TODO login user
-
             // go to home activity
             val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
+
+            loginUser(newUser.email, newUser.password)
         }
     }
 
@@ -135,4 +136,68 @@ class RegistrationActivity : AppCompatActivity() {
         Log.d(TAG, "onFailure: ${t.message.toString()}")
         Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
+
+    private fun loginUser(email: String, password: String) {
+        ApiClient.getApiService(applicationContext)
+            .loginUser(email, password)
+            .enqueue(object : Callback<TokenData> {
+                override fun onFailure(call: Call<TokenData>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<TokenData>, response: Response<TokenData>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponseLogin(response, email)
+                    } else {
+                        handleNotSuccessfulResponseLogin(response)
+                    }
+                }
+            })
+    }
+
+    private fun handleSuccessfulResponseLogin(response: Response<TokenData>, email: String) {
+        val loginResponse: TokenData? = response.body()
+        if (loginResponse != null) {
+            saveLoggedInUserData(email, loginResponse.accessToken)
+            switchActivity(MainActivity::class.java, true)
+        } else {
+            try {
+                val jObjError = JSONObject(response.errorBody()!!.string())
+                val detail = jObjError.getString("detail").toString()
+                if (detail.contains("password", true)) {
+                    etPassword.error = detail
+                    etPassword.requestFocus()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    private fun handleNotSuccessfulResponseLogin(response: Response<TokenData>) {
+        val detail = "Invalid credentials"
+        etEmail.error = detail
+        etPassword.error = detail
+        val msg = "${response.code()} ${response.errorBody()!!.string()}"
+        Log.d(TAG, "onResponse: $msg")
+        Toast.makeText(applicationContext, detail, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(applicationContext, "Error: $msg", Toast.LENGTH_LONG).show()
+    }
+
+    private fun saveLoggedInUserData(email: String, token: String) {
+        sessionManager.saveAuthToken(token)
+        sessionManager.saveUserEmail(email)
+    }
+
+    private fun switchActivity(targetActivity: Class<*>, finishCurrent: Boolean = false) {
+        val intent = Intent(applicationContext, targetActivity)
+        startActivity(intent)
+        if (finishCurrent) {
+            finish()
+        }
+    }
+
 }
