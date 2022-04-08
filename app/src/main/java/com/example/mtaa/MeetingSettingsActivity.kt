@@ -64,6 +64,7 @@ class MeetingSettingsActivity : AppCompatActivity() {
         // set on click listeners
         btnManageUsers.setOnClickListener {
             val intent = Intent(applicationContext, ManageUsersActivity::class.java)
+            intent.putExtra("meeting", selectedMeeting)
             startActivity(intent)
         }
 

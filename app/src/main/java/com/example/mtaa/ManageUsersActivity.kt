@@ -1,5 +1,6 @@
 package com.example.mtaa
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mtaa.adapters.ContactsAdapter
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.ContactList
+import com.example.mtaa.models.MeetingResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +26,7 @@ class ManageUsersActivity : AppCompatActivity() {
     private lateinit var rvContacts: RecyclerView
     private lateinit var rvUsers: RecyclerView
     private lateinit var etUserId: EditText
+    private lateinit var selectedMeeting: MeetingResponse
 
 
     private lateinit var allContacts: List<ContactList>
@@ -46,8 +49,10 @@ class ManageUsersActivity : AppCompatActivity() {
         btnProfile = findViewById(R.id.btnProfile)
         btnBack = findViewById(R.id.btnBack)
 
+        selectedMeeting = intent.getSerializableExtra("meeting") as MeetingResponse
+
         fetchContacts()
-//        fetchUsers()
+        fetchUsers()
 
         btnHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -61,51 +66,51 @@ class ManageUsersActivity : AppCompatActivity() {
 
         btnBack.setOnClickListener { finish() }
 
-//        btnAddUser.setOnClickListener { addUser() }
-//
-//        btnRemoveUser.setOnClickListener { removeUser() }
+        btnAddUser.setOnClickListener { addUser() }
+
+        btnRemoveUser.setOnClickListener { removeUser() }
 
     }
 
-//    private fun addUser() {
-//        ApiClient.getApiService(applicationContext)
-//            .addUserToCall(,etUserId.text.toString().trim().toInt())
-//            .enqueue(object : Callback<List<ContactList>> {
-//                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-//                    handleFailure(t)
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        handleSuccessfulResponse(response)
-//                    } else {
-//                        handleNotSuccessfulResponse(response)
-//                    }
-//                }
-//            })
-//    }
-//
-//    private fun removeUser() {
-//        ApiClient.getApiService(applicationContext)
-//            .removeUserFromCall(,etUserId.text.toString().trim().toInt())
-//            .enqueue(object : Callback<List<ContactList>> {
-//                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-//                    handleFailure(t)
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        handleSuccessfulResponse(response)
-//                    } else {
-//                        handleNotSuccessfulResponse(response)
-//                    }
-//                }
-//            })
-//    }
+    private fun addUser() {
+        ApiClient.getApiService(applicationContext)
+            .addUserToCall(selectedMeeting.id, etUserId.text.toString().trim().toInt())
+            .enqueue(object : Callback<List<ContactList>> {
+                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
+
+    private fun removeUser() {
+        ApiClient.getApiService(applicationContext)
+            .removeUserFromCall(selectedMeeting.id, etUserId.text.toString().trim().toInt())
+            .enqueue(object : Callback<List<ContactList>> {
+                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
 
 
     private fun fetchContacts() {
@@ -144,30 +149,30 @@ class ManageUsersActivity : AppCompatActivity() {
         rvContacts.adapter = ContactsAdapter(contacts)
     }
 
-//    private fun fetchUsers() {
-//        ApiClient.getApiService(applicationContext)
-//            .getUsersOfCall()
-//            .enqueue(object : Callback<List<ContactList>> {
-//                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
-//                    handleFailure(t)
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        handleSuccessfulResponse(response)
-//                    } else {
-//                        handleNotSuccessfulResponse(response)
-//                    }
-//                }
-//            })
-//    }
+    private fun fetchUsers() {
+        ApiClient.getApiService(applicationContext)
+            .getUsersOfCall(selectedMeeting.id)
+            .enqueue(object : Callback<List<ContactList>> {
+                override fun onFailure(call: Call<List<ContactList>>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<List<ContactList>>, response: Response<List<ContactList>>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponse(response)
+                    } else {
+                        handleNotSuccessfulResponse(response)
+                    }
+                }
+            })
+    }
 
 
     private fun handleSuccessfulResponse(response: Response<List<ContactList>>) {
         allUsers = response.body()!!
-        Log.d(TAG, "Received ${allUsers.size} contacts")
+        Log.d(TAG, "Received ${allUsers.size} users")
         showUsers(allUsers)
     }
 
