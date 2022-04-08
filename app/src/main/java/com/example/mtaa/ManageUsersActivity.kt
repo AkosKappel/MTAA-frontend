@@ -12,6 +12,7 @@ import com.example.mtaa.adapters.ContactsAdapter
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.ContactList
 import com.example.mtaa.models.MeetingResponse
+import com.example.mtaa.utilities.Validator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -66,9 +67,17 @@ class ManageUsersActivity : AppCompatActivity() {
 
         btnBack.setOnClickListener { finish() }
 
-        btnAddUser.setOnClickListener { addUser() }
+        btnAddUser.setOnClickListener {
+            if (Validator.validateID(etUserId)) {
+                addUser()
+            }
+        }
 
-        btnRemoveUser.setOnClickListener { removeUser() }
+        btnRemoveUser.setOnClickListener {
+            if (Validator.validateID(etUserId)) {
+                removeUser()
+            }
+        }
 
     }
 
@@ -94,7 +103,7 @@ class ManageUsersActivity : AppCompatActivity() {
 
     private fun removeUser() {
         val removeID = etUserId.text.toString().trim().toInt()
-        if (removeID != selectedMeeting.ownerId){
+        if (removeID != selectedMeeting.ownerId) {
             ApiClient.getApiService(applicationContext)
                 .removeUserFromCall(selectedMeeting.id, removeID)
                 .enqueue(object : Callback<List<ContactList>> {
@@ -112,8 +121,7 @@ class ManageUsersActivity : AppCompatActivity() {
                         }
                     }
                 })
-        }else
-        {
+        } else {
             etUserId.error = "Owner ID"
             etUserId.requestFocus()
         }

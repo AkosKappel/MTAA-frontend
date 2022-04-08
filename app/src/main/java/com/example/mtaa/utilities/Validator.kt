@@ -88,4 +88,14 @@ object Validator {
         return true
     }
 
+    fun validateID(etUserid: EditText): Boolean {
+        val id = etUserid.text.toString().trim()
+        if (id.isEmpty()) {
+            etUserid.error = "ID is required"
+            etUserid.requestFocus()
+            return false
+        }
+        return true
+    }
+
 }

@@ -12,6 +12,7 @@ import com.example.mtaa.adapters.MeetingsAdapter
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.ContactList
 import com.example.mtaa.models.MeetingResponse
+import com.example.mtaa.utilities.Validator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,11 +61,15 @@ class ManageContactsActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
 
         btnAddContact.setOnClickListener {
-            addContact()
+            if (Validator.validateID(etContactId)){
+                addContact()
+            }
         }
 
         btnRemoveContact.setOnClickListener {
-            removeContact()
+            if (Validator.validateID(etContactId)) {
+                removeContact()
+            }
         }
     }
 
