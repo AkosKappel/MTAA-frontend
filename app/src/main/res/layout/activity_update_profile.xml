@@ -73,17 +73,38 @@
 
             <ImageView
                 android:id="@+id/imageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_weight="1" />
+            <Button
+                android:id="@+id/buttonLoadPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                android:text="Load Picture" />
 
-            <TextView
-                android:id="@+id/tvUploadImage"
+            <Button
+                android:id="@+id/buttonUploadPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upload image"
-                android:layout_marginVertical="16dp"
-                android:textSize="24sp"/>
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                android:text="Upload Picture" />
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imageView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                tools:srcCompat="@tools:sample/avatars" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvUploadImage"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Upload image"-->
+<!--                android:layout_marginVertical="16dp"-->
+<!--                android:textSize="24sp"/>-->
 
             <EditText
                 android:id="@+id/etEmail"
