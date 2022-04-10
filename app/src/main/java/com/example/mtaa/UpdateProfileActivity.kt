@@ -1,12 +1,16 @@
 package com.example.mtaa
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.models.UserToRegister
@@ -65,10 +69,6 @@ class UpdateProfileActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
         btnUpdateProfile = findViewById(R.id.btnUpdateProfile)
 
-//        val mSpannableString = SpannableString(tvUploadImage.text)
-//        mSpannableString.setSpan(UnderlineSpan(), 0, mSpannableString.length, 0)
-//        tvUploadImage.text = mSpannableString
-
         // fill user data
         etEmail.setText(sessionManager.fetchUserEmail())
 
@@ -95,7 +95,7 @@ class UpdateProfileActivity : AppCompatActivity() {
                 val inputData =
                     imageUri?.let { contentResolver.openInputStream(it)?.readBytes() }
                 if (inputData != null) {
-                    uploadImage()
+                    permission()
                 }
             } else {
                 Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
@@ -124,20 +124,13 @@ class UpdateProfileActivity : AppCompatActivity() {
     }
 
     private fun uploadImage() {
-//        val path = imageUri?.path!!.split(":").last()
         val uriPathHelper = URIPathHelper()
         val path = imageUri?.let { uriPathHelper.getPath(applicationContext, it) }!!
 
-        Log.d("imageUri = ", imageUri.toString())
-        Log.d("path = ", path)
-        Log.d("imageUri.last() = ", imageUri?.path!!.split(":").last())
         val file = File(path)
-        Log.d("file.exists() = ", file.exists().toString())
 
-        // create RequestBody instance from file
         val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
 
-        // MultipartBody.Part is used to send also the actual file name
         val body = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
         ApiClient.getApiService(applicationContext)
@@ -157,6 +150,17 @@ class UpdateProfileActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+
+    private fun permission(){
+        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                uploadImage()
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            }
+        }
     }
 
     private fun handleSuccessfulResponseImage(response: Response<Void>) {
