@@ -7,33 +7,21 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toFile
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.storage.SessionManager
 import com.example.mtaa.utilities.Utils
 import com.example.mtaa.utilities.Validator
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import org.apache.commons.io.FileUtils
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
-
 
 
 class UpdateProfileActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
-
-    lateinit var imageView: ImageView
-    lateinit var btnLoadPicture: Button
-    private val pickImage = 100
-    private var imageUri: Uri? = null
 
     // toolbar elements
     private lateinit var btnHome: TextView
@@ -46,8 +34,14 @@ class UpdateProfileActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var btnUpdateProfile: Button
 
+    // image upload elements
+    private lateinit var imageView: ImageView
+    private lateinit var btnLoadPicture: Button
+    private var imageUri: Uri? = null
+
     companion object {
         private const val TAG: String = "UpdateProfileActivity"
+        private const val PICK_IMAGE = 100
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +69,7 @@ class UpdateProfileActivity : AppCompatActivity() {
 
         btnLoadPicture.setOnClickListener {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(gallery, pickImage)
+            startActivityForResult(gallery, PICK_IMAGE)
         }
 
         btnUpdateProfile.setOnClickListener {
@@ -105,7 +99,8 @@ class UpdateProfileActivity : AppCompatActivity() {
 
         btnUploadImage.setOnClickListener {
             if (imageUri != null) {
-                val inputData = imageUri?.let { it1 -> contentResolver.openInputStream(it1)?.readBytes() }
+                val inputData =
+                    imageUri?.let { it1 -> contentResolver.openInputStream(it1)?.readBytes() }
                 if (inputData != null) {
 //                    updateImage(Image(inputData))
                 }
@@ -113,47 +108,47 @@ class UpdateProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun uploadFile(fileUri: Uri) {
-
-        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
-        // use the FileUtils to get the actual file by uri
-        val file: File = FileUtils.getFile(this, fileUri)
-
-        // create RequestBody instance from file
-        val requestFile: RequestBody = RequestBody.create(
-            MediaType.parse(contentResolver.getType(fileUri)),
-            file
-        )
-
-        // MultipartBody.Part is used to send also the actual file name
-        val body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile)
-
-        // add another part within the multipart request
-        val descriptionString = "hello, this is description speaking"
-        val description = RequestBody.create(
-            MultipartBody.FORM, descriptionString
-        )
-
-        // finally, execute the request
-        ApiClient.getApiService(applicationContext)
-            .uploadIMG(body)
-            .enqueue(object : Callback<Void?> {
-            override fun onResponse(
-                call: Call<Void?>,
-                response: Response<Void?>
-            ) {
-                Log.v("Upload", "success")
-            }
-
-            override fun onFailure(call: Call<Void?>, t: Throwable) {
-                Log.e("Upload error:", t.message!!)
-            }
-        })
-    }
+//    private fun uploadFile(fileUri: Uri) {
+//
+//        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+//        // use the FileUtils to get the actual file by uri
+//        val file: File = FileUtils.getFile(this, fileUri)
+//
+//        // create RequestBody instance from file
+//        val requestFile: RequestBody = RequestBody.create(
+//            MediaType.parse(contentResolver.getType(fileUri)),
+//            file
+//        )
+//
+//        // MultipartBody.Part is used to send also the actual file name
+//        val body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile)
+//
+//        // add another part within the multipart request
+//        val descriptionString = "hello, this is description speaking"
+//        val description = RequestBody.create(
+//            MultipartBody.FORM, descriptionString
+//        )
+//
+//        // finally, execute the request
+//        ApiClient.getApiService(applicationContext)
+//            .uploadIMG(body)
+//            .enqueue(object : Callback<Void?> {
+//            override fun onResponse(
+//                call: Call<Void?>,
+//                response: Response<Void?>
+//            ) {
+//                Log.v("Upload", "success")
+//            }
+//
+//            override fun onFailure(call: Call<Void?>, t: Throwable) {
+//                Log.e("Upload error:", t.message!!)
+//            }
+//        })
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == pickImage) {
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
             imageUri = data?.data
             imageView.setImageURI(imageUri)
         }

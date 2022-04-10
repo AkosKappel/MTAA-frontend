@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.storage.SessionManager
+//import com.example.mtaa.webrtc.CallActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
 
         btnStartCall.setOnClickListener {
             val intent = Intent(applicationContext, StartCallActivity::class.java)
+            // TODO: nevymazat! na tomto este pracujem
+//            val intent = Intent(applicationContext, CallActivity::class.java)
             startActivity(intent)
         }
 
