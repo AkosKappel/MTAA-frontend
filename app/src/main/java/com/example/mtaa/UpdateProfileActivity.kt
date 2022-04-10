@@ -51,6 +51,7 @@ class UpdateProfileActivity : AppCompatActivity() {
     companion object {
         private const val TAG: String = "UpdateProfileActivity"
         private const val PICK_IMAGE = 100
+        private const val REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +96,7 @@ class UpdateProfileActivity : AppCompatActivity() {
                 val inputData =
                     imageUri?.let { contentResolver.openInputStream(it)?.readBytes() }
                 if (inputData != null) {
-                    permission()
+                    requestPermission()
                 }
             } else {
                 Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
@@ -125,16 +126,14 @@ class UpdateProfileActivity : AppCompatActivity() {
 
     private fun uploadImage() {
         val uriPathHelper = URIPathHelper()
-        val path = imageUri?.let { uriPathHelper.getPath(applicationContext, it) }!!
+        val path = imageUri?.let { uriPathHelper.getPath(applicationContext, it) } ?: return
 
         val file = File(path)
-
         val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
-
         val body = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
         ApiClient.getApiService(applicationContext)
-            .uploadIMG(body)
+            .uploadImage(body)
             .enqueue(object : Callback<Void> {
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     handleFailure(t)
@@ -152,13 +151,27 @@ class UpdateProfileActivity : AppCompatActivity() {
             })
     }
 
-    private fun permission(){
-        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+    private fun requestPermission() {
+        if (ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                Toast.makeText(applicationContext, "Please allow permission!", Toast.LENGTH_LONG)
+                    .show()
             } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_CODE_WRITE_EXTERNAL_STORAGE
+                )
             }
-        }else {
+        } else {
             uploadImage()
         }
     }

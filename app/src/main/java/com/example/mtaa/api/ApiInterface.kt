@@ -106,12 +106,11 @@ interface ApiInterface {
 
     @Multipart
     @PUT("/file/upload")
-    fun uploadIMG(
+    fun uploadImage(
         @Part image: MultipartBody.Part
     ): Call<Void>
 
     @GET("/file/download")
-    fun downloadIMG(
-    ): Call<ResponseBody>
+    fun downloadImage(): Call<ResponseBody>
 
 }

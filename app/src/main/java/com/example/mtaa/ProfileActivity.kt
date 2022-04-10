@@ -1,7 +1,6 @@
 package com.example.mtaa
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -31,7 +30,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tvUserDate: TextView
     private lateinit var btnUpdateProfile: Button
     private lateinit var btnCalendar: Button
-    private lateinit var image: ImageView
+    private lateinit var ivImage: ImageView
 
     companion object {
         private const val TAG: String = "ProfileActivity"
@@ -48,7 +47,7 @@ class ProfileActivity : AppCompatActivity() {
         tvUserId = findViewById(R.id.tvUserIDText)
         tvUserEmail = findViewById(R.id.tvEmailText)
         tvUserDate = findViewById(R.id.tvRegistrationDateText)
-        image = findViewById(R.id.imageView)
+        ivImage = findViewById(R.id.imageView)
 
         btnHome.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
@@ -71,7 +70,7 @@ class ProfileActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         fetchUser()
-        loadImage()
+        downloadImage()
     }
 
     private fun fetchUser() {
@@ -86,20 +85,22 @@ class ProfileActivity : AppCompatActivity() {
                     call: Call<UserResponse>, response: Response<UserResponse>
                 ) {
                     if (response.isSuccessful) {
-                        handleSuccessfulResponse(response)
+                        handleSuccessfulResponseUser(response)
                     } else {
-                        handleNotSuccessfulResponse(response)
+                        handleNotSuccessfulResponseUser(response)
                     }
                 }
             })
     }
 
-    private fun handleSuccessfulResponse(response: Response<UserResponse>) {
+    private fun handleSuccessfulResponseUser(response: Response<UserResponse>) {
         val user = response.body()
         val userId = user?.id ?: "ID not found"
         val userEmail = user?.email ?: "Email not found"
         val userRegistrationDate =
             user?.createdAt?.let { Utils.formatDate(it) } ?: "Registration date not found"
+
+        Log.d(TAG, "Fetched user with id: $userId")
 
         // set fields
         tvUserId.text = userId
@@ -107,7 +108,7 @@ class ProfileActivity : AppCompatActivity() {
         tvUserDate.text = userRegistrationDate
     }
 
-    private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
+    private fun handleNotSuccessfulResponseUser(response: Response<UserResponse>) {
         val errorBody = response.errorBody()?.string()
         val jsonObject = errorBody?.let { JSONObject(it) }
         val detail = Utils.getErrorBodyDetail(jsonObject)
@@ -120,9 +121,9 @@ class ProfileActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
     }
 
-    private fun loadImage() {
+    private fun downloadImage() {
         ApiClient.getApiService(applicationContext)
-            .downloadIMG()
+            .downloadImage()
             .enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     handleFailure(t)
@@ -132,22 +133,23 @@ class ProfileActivity : AppCompatActivity() {
                     call: Call<ResponseBody>, response: Response<ResponseBody>
                 ) {
                     if (response.isSuccessful) {
-                        handleSuccessfulResponseIMG(response)
+                        handleSuccessfulResponseImage(response)
                     } else {
-                        handleNotSuccessfulResponseIMG(response)
+                        handleNotSuccessfulResponseImage(response)
                     }
                 }
             })
     }
 
-    private fun handleSuccessfulResponseIMG(response: Response<ResponseBody>) {
+    private fun handleSuccessfulResponseImage(response: Response<ResponseBody>) {
         if (response.body() != null) {
+            Log.d(TAG, "Image downloaded successfully")
             val bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
-            image.setImageBitmap(bmp)
+            ivImage.setImageBitmap(bmp)
         }
     }
 
-    private fun handleNotSuccessfulResponseIMG(response: Response<ResponseBody>) {
+    private fun handleNotSuccessfulResponseImage(response: Response<ResponseBody>) {
         val errorBody = response.errorBody()?.string()
         val jsonObject = errorBody?.let { JSONObject(it) }
         val detail = Utils.getErrorBodyDetail(jsonObject)
