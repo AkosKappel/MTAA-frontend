@@ -2,6 +2,7 @@ package com.example.mtaa.api
 
 import com.example.mtaa.models.*
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -108,5 +109,9 @@ interface ApiInterface {
     fun uploadIMG(
         @Part image: MultipartBody.Part
     ): Call<Void>
+
+    @GET("/file/download")
+    fun downloadIMG(
+    ): Call<ResponseBody>
 
 }

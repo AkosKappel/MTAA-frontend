@@ -154,12 +154,12 @@ class UpdateProfileActivity : AppCompatActivity() {
 
     private fun permission(){
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                uploadImage()
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             } else {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
             }
+        }else {
+            uploadImage()
         }
     }
 
@@ -167,7 +167,6 @@ class UpdateProfileActivity : AppCompatActivity() {
         val msg = "Image has been updated"
         Log.d(TAG, msg)
         Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
-        finish()
     }
 
     private fun handleNotSuccessfulResponseImage(response: Response<Void>) {

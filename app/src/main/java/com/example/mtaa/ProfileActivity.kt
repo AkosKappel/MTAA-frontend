@@ -1,6 +1,8 @@
 package com.example.mtaa
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.utilities.Utils
+import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tvUserDate: TextView
     private lateinit var btnUpdateProfile: Button
     private lateinit var btnCalendar: Button
+    private lateinit var image: ImageView
 
     companion object {
         private const val TAG: String = "ProfileActivity"
@@ -44,6 +48,7 @@ class ProfileActivity : AppCompatActivity() {
         tvUserId = findViewById(R.id.tvUserIDText)
         tvUserEmail = findViewById(R.id.tvEmailText)
         tvUserDate = findViewById(R.id.tvRegistrationDateText)
+        image = findViewById(R.id.imageView)
 
         btnHome.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
@@ -66,6 +71,7 @@ class ProfileActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         fetchUser()
+        loadImage()
     }
 
     private fun fetchUser() {
@@ -112,5 +118,40 @@ class ProfileActivity : AppCompatActivity() {
     private fun handleFailure(t: Throwable) {
         Log.d(TAG, "onFailure: ${t.message.toString()}")
         Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun loadImage() {
+        ApiClient.getApiService(applicationContext)
+            .downloadIMG()
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<ResponseBody>, response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponseIMG(response)
+                    } else {
+                        handleNotSuccessfulResponseIMG(response)
+                    }
+                }
+            })
+    }
+
+    private fun handleSuccessfulResponseIMG(response: Response<ResponseBody>) {
+        if (response.body() != null) {
+            val bmp = BitmapFactory.decodeStream(response.body()!!.byteStream())
+            image.setImageBitmap(bmp)
+        }
+    }
+
+    private fun handleNotSuccessfulResponseIMG(response: Response<ResponseBody>) {
+        val errorBody = response.errorBody()?.string()
+        val jsonObject = errorBody?.let { JSONObject(it) }
+        val detail = Utils.getErrorBodyDetail(jsonObject)
+        Log.d(TAG, "onResponse: ${response.code()} $detail")
+        Toast.makeText(applicationContext, "Error: $detail", Toast.LENGTH_LONG).show()
     }
 }
