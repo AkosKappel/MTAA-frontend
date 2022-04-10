@@ -68,14 +68,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="24dp"
-            android:layout_marginTop="64dp">
+            android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvNadpis"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="Update profile"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_weight="1" />
+
             <Button
                 android:id="@+id/buttonLoadPicture"
                 android:layout_width="wrap_content"
