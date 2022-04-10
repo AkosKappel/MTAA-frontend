@@ -103,9 +103,10 @@ interface ApiInterface {
     // |       FILES        |
     // ----------------------
 
+    @Multipart
     @PUT("/file/upload")
     fun uploadIMG(
-        @Body image: MultipartBody.Part
+        @Part image: MultipartBody.Part
     ): Call<Void>
 
 }

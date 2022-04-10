@@ -11,12 +11,17 @@ import com.example.mtaa.api.ApiClient
 import com.example.mtaa.models.UserResponse
 import com.example.mtaa.models.UserToRegister
 import com.example.mtaa.storage.SessionManager
+import com.example.mtaa.utilities.URIPathHelper
 import com.example.mtaa.utilities.Utils
 import com.example.mtaa.utilities.Validator
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 
 class UpdateProfileActivity : AppCompatActivity() {
@@ -67,11 +72,6 @@ class UpdateProfileActivity : AppCompatActivity() {
         // fill user data
         etEmail.setText(sessionManager.fetchUserEmail())
 
-        btnLoadPicture.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(gallery, PICK_IMAGE)
-        }
-
         btnUpdateProfile.setOnClickListener {
             if (!Validator.validateEmail(etEmail)) {
                 return@setOnClickListener
@@ -85,8 +85,25 @@ class UpdateProfileActivity : AppCompatActivity() {
             updateUser(updatedUser)
         }
 
+        btnLoadPicture.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, PICK_IMAGE)
+        }
+
+        btnUploadImage.setOnClickListener {
+            if (imageUri != null) {
+                val inputData =
+                    imageUri?.let { contentResolver.openInputStream(it)?.readBytes() }
+                if (inputData != null) {
+                    uploadImage()
+                }
+            } else {
+                Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         btnHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -96,55 +113,7 @@ class UpdateProfileActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener { finish() }
-
-        btnUploadImage.setOnClickListener {
-            if (imageUri != null) {
-                val inputData =
-                    imageUri?.let { it1 -> contentResolver.openInputStream(it1)?.readBytes() }
-                if (inputData != null) {
-//                    updateImage(Image(inputData))
-                }
-            }
-        }
     }
-
-//    private fun uploadFile(fileUri: Uri) {
-//
-//        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
-//        // use the FileUtils to get the actual file by uri
-//        val file: File = FileUtils.getFile(this, fileUri)
-//
-//        // create RequestBody instance from file
-//        val requestFile: RequestBody = RequestBody.create(
-//            MediaType.parse(contentResolver.getType(fileUri)),
-//            file
-//        )
-//
-//        // MultipartBody.Part is used to send also the actual file name
-//        val body = MultipartBody.Part.createFormData("picture", file.getName(), requestFile)
-//
-//        // add another part within the multipart request
-//        val descriptionString = "hello, this is description speaking"
-//        val description = RequestBody.create(
-//            MultipartBody.FORM, descriptionString
-//        )
-//
-//        // finally, execute the request
-//        ApiClient.getApiService(applicationContext)
-//            .uploadIMG(body)
-//            .enqueue(object : Callback<Void?> {
-//            override fun onResponse(
-//                call: Call<Void?>,
-//                response: Response<Void?>
-//            ) {
-//                Log.v("Upload", "success")
-//            }
-//
-//            override fun onFailure(call: Call<Void?>, t: Throwable) {
-//                Log.e("Upload error:", t.message!!)
-//            }
-//        })
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -154,25 +123,56 @@ class UpdateProfileActivity : AppCompatActivity() {
         }
     }
 
-//    private fun updateImage(inputData: Image) {
-//        ApiClient.getApiService(applicationContext)
-//            .uploadIMG(inputData)
-//            .enqueue(object : Callback<Void> {
-//                override fun onFailure(call: Call<Void>, t: Throwable) {
-//                    handleFailure(t)
-//                }
-//
-//                override fun onResponse(
-//                    call: Call<Void>, response: Response<Void>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        handleSuccessfulResponseIMG(response)
-//                    } else {
-//                        handleNotSuccessfulResponseIMG(response)
-//                    }
-//                }
-//            })
-//    }
+    private fun uploadImage() {
+//        val path = imageUri?.path!!.split(":").last()
+        val uriPathHelper = URIPathHelper()
+        val path = imageUri?.let { uriPathHelper.getPath(applicationContext, it) }!!
+
+        Log.d("imageUri = ", imageUri.toString())
+        Log.d("path = ", path)
+        Log.d("imageUri.last() = ", imageUri?.path!!.split(":").last())
+        val file = File(path)
+        Log.d("file.exists() = ", file.exists().toString())
+
+        // create RequestBody instance from file
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+
+        // MultipartBody.Part is used to send also the actual file name
+        val body = MultipartBody.Part.createFormData("image", file.name, requestBody)
+
+        ApiClient.getApiService(applicationContext)
+            .uploadIMG(body)
+            .enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    handleFailure(t)
+                }
+
+                override fun onResponse(
+                    call: Call<Void>, response: Response<Void>
+                ) {
+                    if (response.isSuccessful) {
+                        handleSuccessfulResponseImage(response)
+                    } else {
+                        handleNotSuccessfulResponseImage(response)
+                    }
+                }
+            })
+    }
+
+    private fun handleSuccessfulResponseImage(response: Response<Void>) {
+        val msg = "Image has been updated"
+        Log.d(TAG, msg)
+        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    private fun handleNotSuccessfulResponseImage(response: Response<Void>) {
+        val errorBody = response.errorBody()?.string()
+        val jsonObject = errorBody?.let { JSONObject(it) }
+        val detail = Utils.getErrorBodyDetail(jsonObject)
+        Log.d(TAG, "onResponse: ${response.code()} $detail")
+        Toast.makeText(applicationContext, "Error: $detail", Toast.LENGTH_LONG).show()
+    }
 
     private fun updateUser(user: UserToRegister) {
         ApiClient.getApiService(applicationContext)
@@ -206,21 +206,6 @@ class UpdateProfileActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Profile update failed", Toast.LENGTH_SHORT)
                 .show()
         }
-    }
-
-    private fun handleSuccessfulResponseIMG(response: Response<Void>) {
-        val msg = "Meeting deleted successfully"
-        Log.d(TAG, msg)
-        Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
-        finish()
-    }
-
-    private fun handleNotSuccessfulResponseIMG(response: Response<Void>) {
-        val errorBody = response.errorBody()?.string()
-        val jsonObject = errorBody?.let { JSONObject(it) }
-        val detail = Utils.getErrorBodyDetail(jsonObject)
-        Log.d(TAG, "onResponse: ${response.code()} $detail")
-        Toast.makeText(applicationContext, "Error: $detail", Toast.LENGTH_LONG).show()
     }
 
     private fun handleNotSuccessfulResponse(response: Response<UserResponse>) {
