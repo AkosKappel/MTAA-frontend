@@ -74,6 +74,7 @@
             android:id="@+id/tvNadpis"
             android:layout_width="match_parent"
             android:layout_height="32dp"
+            android:textColor="@color/purple_500"
             android:gravity="center"
             android:text="Update profile"
             android:textSize="24dp"
@@ -92,6 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0"
+                android:textColor="@color/purple_500"
+                android:backgroundTint="@color/white"
                 android:text="Load Picture" />
 
             <Button
@@ -101,20 +104,6 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:text="Upload Picture" />
-
-<!--            <ImageView-->
-<!--                android:id="@+id/imageView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                tools:srcCompat="@tools:sample/avatars" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tvUploadImage"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Upload image"-->
-<!--                android:layout_marginVertical="16dp"-->
-<!--                android:textSize="24sp"/>-->
 
             <EditText
                 android:id="@+id/etEmail"

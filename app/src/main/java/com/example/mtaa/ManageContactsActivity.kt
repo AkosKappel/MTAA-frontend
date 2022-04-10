@@ -146,7 +146,7 @@ class ManageContactsActivity : AppCompatActivity() {
     }
 
     private fun handleSuccessfulResponse(response: Response<List<Contact>>) {
-        allContacts = response.body()!!
+        allContacts = response.body()?.sortedBy { it.id }!!
         Log.d(TAG, "Received ${allContacts.size} contacts")
         etContactId.setText("")
 

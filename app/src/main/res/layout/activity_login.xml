@@ -54,6 +54,7 @@
                 android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="Login"
+                android:textColor="@color/purple_500"
                 android:textSize="40sp"
                 android:textStyle="bold" />
 
@@ -73,6 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="8dp"
                 android:ems="10"
                 android:hint="Password"
                 android:inputType="textPassword"
@@ -88,7 +90,6 @@
                 android:layout_marginBottom="8dp"
                 android:text="Login"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:theme="@style/primaryButton" />
 
@@ -99,8 +100,8 @@
                 android:layout_marginVertical="8dp"
                 android:layout_marginHorizontal="16dp"
                 android:text="Register"
+                android:textColor="@color/purple_500"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:theme="@style/secondaryButton" />
 

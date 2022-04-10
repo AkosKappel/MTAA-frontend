@@ -73,6 +73,7 @@
             android:text="Contacts"
             android:textSize="24dp"
             android:textStyle="bold"
+            android:textColor="@color/purple_500"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -117,7 +118,8 @@
             android:layout_marginTop="8dp"
             android:text="Remove contact"
             android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:textColor="@color/purple_500"
+            android:backgroundTint="@color/white"
             android:textSize="16sp" />
 
         <Button
@@ -127,7 +129,6 @@
             android:layout_marginTop="8dp"
             android:text="Add contact"
             android:textAllCaps="false"
-            android:textColor="@color/white"
             android:textSize="16sp" />
 
     </LinearLayout>

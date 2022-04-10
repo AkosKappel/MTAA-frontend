@@ -73,6 +73,7 @@ tools:context=".ManageUsersActivity">
             android:layout_height="32dp"
             android:gravity="center"
             android:text="Manage Users in Call"
+            android:textColor="@color/purple_500"
             android:textSize="24dp"
             android:textStyle="bold"
             android:layout_marginBottom="16dp"
@@ -131,8 +132,9 @@ tools:context=".ManageUsersActivity">
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Remove user"
+            android:textColor="@color/purple_500"
+            android:backgroundTint="@color/white"
             android:textAllCaps="false"
-            android:textColor="@color/white"
             android:textSize="16sp" />
 
         <Button

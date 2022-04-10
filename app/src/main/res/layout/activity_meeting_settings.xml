@@ -75,6 +75,7 @@
             <TextView
                 android:id="@+id/tvNadpis"
                 android:layout_width="match_parent"
+                android:textColor="@color/purple_500"
                 android:layout_height="32dp"
                 android:gravity="center"
                 android:text="Meeting settings"
@@ -134,7 +135,8 @@
                 android:layout_marginBottom="8dp"
                 android:text="Manage users"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/purple_500"
+                android:backgroundTint="@color/white"
                 android:textSize="20sp"
                 android:theme="@style/primaryButton" />
 
@@ -146,8 +148,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:text="Delete meeting"
+                android:textColor="@color/purple_500"
+                android:backgroundTint="@color/white"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:theme="@style/primaryButton" />
 

@@ -74,6 +74,7 @@
 
             <TextView
                 android:id="@+id/tvNadpis"
+                android:textColor="@color/purple_500"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:gravity="center"
@@ -172,7 +173,7 @@
                 android:layout_marginVertical="8dp"
                 android:text="Calendar"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/purple_500"
                 android:textSize="20sp"
                 android:theme="@style/secondaryButton" />
 

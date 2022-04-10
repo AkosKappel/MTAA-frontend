@@ -175,13 +175,13 @@ class ManageUsersActivity : AppCompatActivity() {
     }
 
     private fun handleSuccessfulResponseContacts(response: Response<List<Contact>>) {
-        allContacts = response.body()!!
+        allContacts = response.body()?.sortedBy { it.id }!!
         Log.d(TAG, "Received ${allContacts.size} contacts")
         showContacts()
     }
 
     private fun handleSuccessfulResponseUsers(response: Response<List<Contact>>) {
-        allUsers = response.body()!!
+        allUsers = response.body()?.sortedBy { it.id }!!
         Log.d(TAG, "Received ${allUsers.size} users")
         etUserId.setText("")
         showUsers()
