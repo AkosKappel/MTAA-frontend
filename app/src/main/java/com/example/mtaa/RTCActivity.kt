@@ -66,7 +66,7 @@ class RTCActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_call)
 
         remote_view = findViewById(R.id.remote_view)
         local_view = findViewById(R.id.local_view)

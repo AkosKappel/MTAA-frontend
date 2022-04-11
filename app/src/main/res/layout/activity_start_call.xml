@@ -64,7 +64,7 @@
         android:gravity="center">
 
         <EditText
-            android:id="@+id/etCallId"
+            android:id="@+id/meeting_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
@@ -74,13 +74,24 @@
             android:minHeight="48dp" />
 
         <Button
-            android:id="@+id/btnStartCall"
+            android:id="@+id/start_meeting"
             android:layout_width="192dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Start call"
             android:textAllCaps="false"
             android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/join_meeting"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Join call"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/purple_500"
             android:textSize="16sp" />
 
     </LinearLayout>

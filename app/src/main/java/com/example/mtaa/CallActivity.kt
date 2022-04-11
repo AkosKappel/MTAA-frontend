@@ -18,7 +18,8 @@ class CallActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_start)
+        setContentView(R.layout.activity_start_call)
+//        setContentView(R.layout.activity_start)
 
         start_meeting = findViewById(R.id.start_meeting)
         join_meeting = findViewById(R.id.join_meeting)
