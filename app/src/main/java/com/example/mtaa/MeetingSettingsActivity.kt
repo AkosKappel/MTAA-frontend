@@ -200,8 +200,6 @@ class MeetingSettingsActivity : AppCompatActivity() {
 
     private fun handleFailure(t: Throwable) {
         Log.d(TAG, "onFailure: ${t.message.toString()}")
-        // TODO: 204 No Content -> vykona delete, ale hodi failure
-//        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
         finish()
     }
 }
