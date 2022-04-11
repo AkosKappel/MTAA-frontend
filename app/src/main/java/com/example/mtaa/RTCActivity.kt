@@ -44,7 +44,7 @@ class RTCActivity : AppCompatActivity() {
 
     private val audioManager by lazy { RTCAudioManager.create(this) }
 
-    val TAG = "MainActivity"
+    val TAG = "RTCActivity"
 
     private var meetingID: String = "test-call"
 
@@ -63,7 +63,7 @@ class RTCActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("NewApi")
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
