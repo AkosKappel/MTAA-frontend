@@ -59,12 +59,12 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
-<!--        <activity android:name=".webrtc.CallActivity"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:exported="false"/>-->
-<!--        <activity android:name=".webrtc.RTCActivity"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            android:exported="false"/>-->
+        <activity android:name=".CallActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
+        <activity android:name=".RTCActivity"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
     </application>
 
 </manifest>

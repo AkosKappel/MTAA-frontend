@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdk 32
@@ -22,6 +23,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    packagingOptions {
+        exclude("META-INF/kotlinx-io.kotlin_module")
+        exclude("META-INF/atomicfu.kotlin_module")
+        exclude("META-INF/kotlinx-coroutines-io.kotlin_module")
+        exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -62,7 +69,10 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
     implementation('org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0')
-//    implementation 'org.webrtc:google-webrtc:1.0.32006'
+    implementation 'org.webrtc:google-webrtc:1.0.32006'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 //    implementation fileTree(dir: 'libs', include: ['*.aar'])
 
@@ -71,4 +81,7 @@ dependencies {
 //    implementation('io.ktor:ktor-client-websocket:')
 //    implementation('io.ktor:ktor-client-cio:')
 //    implementation('io.ktor:ktor-client-gson:')
+}
+repositories {
+    mavenCentral()
 }
