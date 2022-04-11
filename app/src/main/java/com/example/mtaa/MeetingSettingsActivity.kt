@@ -27,6 +27,7 @@ class MeetingSettingsActivity : AppCompatActivity() {
     private lateinit var cvCalendar: CalendarView
     private lateinit var etTitle: EditText
     private lateinit var etTime: EditText
+    private lateinit var tvMeetingIDText: TextView
     private lateinit var etDuration: EditText
     private lateinit var btnManageUsers: Button
     private lateinit var btnDeleteMeeting: Button
@@ -55,10 +56,12 @@ class MeetingSettingsActivity : AppCompatActivity() {
         btnDeleteMeeting = findViewById(R.id.btnDeleteMeeting)
         btnSaveChanges = findViewById(R.id.btnSaveChanges)
         join_meeting = findViewById(R.id.join_meeting)
+        tvMeetingIDText = findViewById(R.id.tvMeetingIDText)
 
         selectedMeeting = intent.getSerializableExtra("meeting") as MeetingResponse
 
         // fill in meeting settings
+        tvMeetingIDText.text = selectedMeeting.id.toString()
         cvCalendar.date = selectedMeeting.date.time
         etTitle.setText(selectedMeeting.title)
         etTime.setText(Utils.formatTime(selectedMeeting.date))
