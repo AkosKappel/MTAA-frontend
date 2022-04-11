@@ -31,6 +31,7 @@ class MeetingSettingsActivity : AppCompatActivity() {
     private lateinit var btnManageUsers: Button
     private lateinit var btnDeleteMeeting: Button
     private lateinit var btnSaveChanges: Button
+    private lateinit var join_meeting: Button
 
     private lateinit var selectedMeeting: MeetingResponse
 
@@ -53,6 +54,7 @@ class MeetingSettingsActivity : AppCompatActivity() {
         btnManageUsers = findViewById(R.id.btnManageUsers)
         btnDeleteMeeting = findViewById(R.id.btnDeleteMeeting)
         btnSaveChanges = findViewById(R.id.btnSaveChanges)
+        join_meeting = findViewById(R.id.join_meeting)
 
         selectedMeeting = intent.getSerializableExtra("meeting") as MeetingResponse
 
@@ -103,6 +105,15 @@ class MeetingSettingsActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener { finish() }
+
+        join_meeting.setOnClickListener {
+            if (!selectedMeeting.id.toString().trim().isEmpty()){
+                val intent = Intent(applicationContext, RTCActivity::class.java)
+                intent.putExtra("meetingID",selectedMeeting.id.toString())
+                intent.putExtra("isJoin",true)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun updateMeeting(meeting: MeetingRequest) {
