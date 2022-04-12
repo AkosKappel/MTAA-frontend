@@ -2,8 +2,10 @@ package com.example.mtaa
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mtaa.storage.SessionManager
 
@@ -66,16 +68,26 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnLogOut.setOnClickListener {
-            deleteLoggedInUserData()
-            val intent = Intent(applicationContext, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        btnLogOut.setOnClickListener { logout() }
     }
 
-    private fun deleteLoggedInUserData() {
-        sessionManager.deleteAuthToken()
-        sessionManager.deleteUserEmail()
+    private fun logout() {
+        // alert dialog for asking user to confirm logout
+        AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                dialog.dismiss()
+                Log.d(TAG, "User logged out")
+                sessionManager.deleteAuthToken()
+                sessionManager.deleteUserEmail()
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }
