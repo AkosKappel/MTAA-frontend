@@ -28,9 +28,10 @@ class CallActivity : AppCompatActivity() {
         Constants.isIntiatedNow = true
         Constants.isCallEnded = true
         start_meeting.setOnClickListener {
-            if (meeting_id.text.toString().trim().isNullOrEmpty())
-                meeting_id.error = "Please enter meeting id"
-            else {
+            val meetingId = meeting_id.text.toString().trim()
+            if (meetingId.isEmpty() || meetingId.toIntOrNull() == null) {
+                meeting_id.error = "Please enter valid meeting id"
+            } else {
                 db.collection("calls")
                         .document(meeting_id.text.toString())
                         .get()
@@ -39,7 +40,7 @@ class CallActivity : AppCompatActivity() {
                                 meeting_id.error = "Please enter new meeting ID"
                             } else {
                                 val intent = Intent(this@CallActivity, RTCActivity::class.java)
-                                intent.putExtra("meetingID",meeting_id.text.toString())
+                                intent.putExtra("meetingID", meetingId)
                                 intent.putExtra("isJoin",false)
                                 startActivity(intent)
                             }
@@ -50,11 +51,12 @@ class CallActivity : AppCompatActivity() {
             }
         }
         join_meeting.setOnClickListener {
-            if (meeting_id.text.toString().trim().isNullOrEmpty())
-                meeting_id.error = "Please enter meeting id"
-            else {
+            val meetingId = meeting_id.text.toString().trim()
+            if (meetingId.isEmpty() || meetingId.toIntOrNull() == null) {
+                meeting_id.error = "Please enter valid meeting id"
+            } else {
                 val intent = Intent(this@CallActivity, RTCActivity::class.java)
-                intent.putExtra("meetingID",meeting_id.text.toString())
+                intent.putExtra("meetingID", meetingId)
                 intent.putExtra("isJoin",true)
                 startActivity(intent)
             }
